@@ -1,4 +1,3 @@
-import zxcvbn from 'zxcvbn';
 
 export interface ValidationRule {
     id: string;
@@ -20,7 +19,7 @@ export interface PasswordValidationResult {
     isEmpty: boolean
 }
 
-const STRENGTH_LEVELS: Record<number, PasswordStrengthConfig> = {
+export const STRENGTH_LEVELS: Record<number, PasswordStrengthConfig> = {
     // 1: Dùng màu đỏ đậm (Rose/Red) cho mức yếu nhất
     1: { label: "Weak", color: "text-red-600", bg: "bg-red-600" },
     // 2: Dùng màu cam rực (Amber) để tách biệt hẳn với đỏ
@@ -31,7 +30,10 @@ const STRENGTH_LEVELS: Record<number, PasswordStrengthConfig> = {
     4: { label: "Strong", color: "text-emerald-500", bg: "bg-emerald-500" },
 };
 
-export const validatePassword = (password: string): PasswordValidationResult => {
+export const validatePassword = async (password: string): Promise<PasswordValidationResult> => {
+
+    const {default: zxcvbn} = await import('zxcvbn');
+
     const rules = [
         { id: 'length', label: 'At least 8 characters', test: (p: string) => p.length >= 8 },
         { id: 'uppercase', label: 'Contains uppercase letter', test: (p: string) => /[A-Z]/.test(p) },
