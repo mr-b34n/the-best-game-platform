@@ -1,6 +1,11 @@
 import { createFileRoute } from '@tanstack/react-router'
-import Game from '../../pages/Game'
 
+const Game = () => {
+
+	return (
+		<div>Game</div>
+	)
+}
 export const Route = createFileRoute('/game/$gameSlug')({
-  component: Game,
+	component: Game,
 })
