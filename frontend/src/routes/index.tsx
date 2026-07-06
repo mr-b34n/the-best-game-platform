@@ -31,7 +31,7 @@ const Home = () => {
 			/>
 
 			{/* Header */}
-			<div className="w-full h-fit top-0 flex flex-row justify-between items-center px-2 bg-[#E0F2FE] dark:bg-slate-950 sticky">
+			<div className="w-full h-fit top-0 flex flex-row justify-between items-center px-2 bg-white/80 backdrop-blur-md dark:bg-slate-950/80 border-b border-slate-200 dark:border-slate-800 sticky">
 				<div className="z-10 w-fit h-fit self-start text-black dark:text-white p-2 text-3xl font-extrabold">
 					<p>IndieG</p>
 				</div>
@@ -69,7 +69,7 @@ const Home = () => {
 			</div>
 
 			{/* Body */}
-			<div className="relative flex flex-row justify-center overflow-y-auto w-full h-fit bg-transparent">
+			<div className="relative overflow-y-auto w-full h-screen bg-transparent">
 				<LeftBar />
 
 				<FeedList />
