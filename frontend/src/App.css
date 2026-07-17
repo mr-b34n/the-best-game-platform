@@ -2,10 +2,6 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
 @layer base {
 
     input:-webkit-autofill,
@@ -25,4 +21,86 @@
         -webkit-text-fill-color: white !important;
         caret-color: white !important;
     }
+}
+
+@theme {
+    /* ===== Scale màu gốc — dùng khi cần class trực tiếp như bg-brand-500 ===== */
+    --color-brand-50: #f4f2ff;
+    --color-brand-100: #e9e5ff;
+    --color-brand-200: #d4cbff;
+    --color-brand-300: #b3a3ff;
+    --color-brand-400: #9270ff;
+    --color-brand-500: #7c4dff;
+    --color-brand-600: #6935e6;
+    --color-brand-700: #5726bd;
+    --color-brand-800: #451f96;
+    --color-brand-900: #391c78;
+
+    --color-accent-400: #ff7a59;
+    --color-accent-500: #ff5c33;
+    --color-accent-600: #e8481f;
+
+    --color-success-400: #2dd4a7;
+    --color-success-500: #14b892;
+
+    --color-neutral-0: #ffffff;
+    --color-neutral-50: #f8f7fc;
+    --color-neutral-100: #efedf7;
+    --color-neutral-200: #e0ddef;
+    --color-neutral-300: #c7c2dc;
+    --color-neutral-400: #9d96b8;
+    --color-neutral-500: #726b8f;
+    --color-neutral-600: #574f70;
+    --color-neutral-700: #423b58;
+    --color-neutral-800: #2a2440;
+    --color-neutral-900: #1a1530;
+    --color-neutral-950: #100c1f;
+
+    --color-tag-1: #7c4dff;
+    --color-tag-2: #ff7a59;
+    --color-tag-3: #14b892;
+    --color-tag-4: #ffb02e;
+    --color-tag-5: #ec4899;
+
+    /* ===== Semantic tokens — TỰ ĐỘNG đổi theo .dark, dùng trực tiếp trong component ===== */
+    --color-bg: var(--color-neutral-50);
+    /* nền toàn trang */
+    --color-surface: var(--color-neutral-0);
+    /* nền card/panel */
+    --color-surface-hover: var(--color-neutral-100);
+    --color-border: var(--color-neutral-200);
+
+    --color-text: var(--color-neutral-900);
+    /* chữ chính */
+    --color-text-muted: var(--color-neutral-500);
+    /* chữ phụ */
+    --color-text-faint: var(--color-neutral-400);
+    /* chữ mờ nhất, placeholder */
+
+    --color-primary: var(--color-brand-500);
+    --color-primary-hover: var(--color-brand-600);
+    --color-primary-soft: var(--color-brand-100);
+    /* nền nhạt cho active state */
+
+    --color-like: var(--color-accent-500);
+    --color-like-soft: #fff1ec;
+}
+
+.dark {
+    --color-bg: var(--color-neutral-950);
+    --color-surface: var(--color-neutral-900);
+    --color-surface-hover: var(--color-neutral-800);
+    --color-border: var(--color-neutral-800);
+
+    --color-text: var(--color-neutral-50);
+    --color-text-muted: var(--color-neutral-400);
+    --color-text-faint: var(--color-neutral-500);
+
+    --color-primary: var(--color-brand-400);
+    /* sáng hơn light mode để đủ tương phản */
+    --color-primary-hover: var(--color-brand-300);
+    --color-primary-soft: color-mix(in srgb, var(--color-brand-500) 20%, transparent);
+
+    --color-like: var(--color-accent-400);
+    --color-like-soft: color-mix(in srgb, var(--color-accent-500) 15%, transparent);
 }
