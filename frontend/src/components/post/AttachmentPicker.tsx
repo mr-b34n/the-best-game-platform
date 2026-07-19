@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFile, faImage, faPaperclip, faXmark } from "@fortawesome/free-solid-svg-icons";
 import {
@@ -20,6 +20,8 @@ interface AttachmentPickerProps {
     attachments: EditableAttachment[];
     onChange: (attachments: EditableAttachment[]) => void;
     showToolbar?: boolean;
+    compactToolbar?: boolean;
+    toolbarTrailing?: ReactNode;
     className?: string;
 }
 
@@ -27,6 +29,8 @@ export function AttachmentPicker({
     attachments,
     onChange,
     showToolbar = true,
+    compactToolbar = false,
+    toolbarTrailing,
     className = "",
 }: AttachmentPickerProps) {
     const [error, setError] = useState<string | null>(null);
@@ -36,6 +40,12 @@ export function AttachmentPicker({
 
     const imageCount = attachments.filter((a) => a.kind === "image").length;
     const fileCount = attachments.filter((a) => a.kind === "file").length;
+
+    useEffect(() => {
+        if (attachments.length === 0) {
+            setError(null);
+        }
+    }, [attachments]);
 
     const addFiles = (files: FileList | null, kind: "image" | "file") => {
         if (!files || files.length === 0) return;
@@ -176,31 +186,47 @@ export function AttachmentPicker({
                 <p className="text-xs text-accent-500 font-medium">{error}</p>
             )}
 
-            {showToolbar && (
-                <div className="flex flex-row items-center gap-1">
-                    <button
-                        type="button"
-                        onClick={() => imageInputRef.current?.click()}
-                        disabled={imageCount >= MAX_IMAGES}
-                        title={`Add image (max ${MAX_IMAGES}, ${formatFileSize(MAX_ATTACHMENT_SIZE)} each)`}
-                        className="w-8 h-8 flex items-center justify-center rounded-full text-text-muted hover:bg-surface-hover hover:text-primary transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
-                    >
-                        <FontAwesomeIcon icon={faImage} className="text-[15px]" />
-                    </button>
-                    <button
-                        type="button"
-                        onClick={() => fileInputRef.current?.click()}
-                        disabled={fileCount >= MAX_FILES}
-                        title={`Add file (max ${MAX_FILES}, ${formatFileSize(MAX_ATTACHMENT_SIZE)} each)`}
-                        className="w-8 h-8 flex items-center justify-center rounded-full text-text-muted hover:bg-surface-hover hover:text-primary transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
-                    >
-                        <FontAwesomeIcon icon={faPaperclip} className="text-[15px]" />
-                    </button>
-                    <span className="text-[10px] text-text-faint ml-1">
-                        Max {formatFileSize(MAX_ATTACHMENT_SIZE)} · {MAX_IMAGES} imgs · {MAX_FILES} files
-                    </span>
+            <div
+                className={`grid transition-[grid-template-rows,opacity] duration-200 ease-out ${
+                    showToolbar
+                        ? "grid-rows-[1fr] opacity-100"
+                        : "grid-rows-[0fr] opacity-0 pointer-events-none"
+                }`}
+                aria-hidden={!showToolbar}
+            >
+                <div className="overflow-hidden min-h-0">
+                    <div className="flex flex-row items-center justify-between gap-2">
+                        <div className="flex flex-row items-center gap-1 min-w-0">
+                            <button
+                                type="button"
+                                onClick={() => imageInputRef.current?.click()}
+                                disabled={imageCount >= MAX_IMAGES || !showToolbar}
+                                tabIndex={showToolbar ? 0 : -1}
+                                title={`Add image (max ${MAX_IMAGES}, ${formatFileSize(MAX_ATTACHMENT_SIZE)} each)`}
+                                className="w-8 h-8 flex items-center justify-center rounded-full text-text-muted hover:bg-surface-hover hover:text-primary transition-colors duration-150 disabled:opacity-40 disabled:cursor-not-allowed"
+                            >
+                                <FontAwesomeIcon icon={faImage} className="text-[15px]" />
+                            </button>
+                            <button
+                                type="button"
+                                onClick={() => fileInputRef.current?.click()}
+                                disabled={fileCount >= MAX_FILES || !showToolbar}
+                                tabIndex={showToolbar ? 0 : -1}
+                                title={`Add file (max ${MAX_FILES}, ${formatFileSize(MAX_ATTACHMENT_SIZE)} each)`}
+                                className="w-8 h-8 flex items-center justify-center rounded-full text-text-muted hover:bg-surface-hover hover:text-primary transition-colors duration-150 disabled:opacity-40 disabled:cursor-not-allowed"
+                            >
+                                <FontAwesomeIcon icon={faPaperclip} className="text-[15px]" />
+                            </button>
+                            {!compactToolbar && (
+                                <span className="text-[10px] text-text-faint ml-1 truncate">
+                                    Max {formatFileSize(MAX_ATTACHMENT_SIZE)} · {MAX_IMAGES} imgs · {MAX_FILES} files
+                                </span>
+                            )}
+                        </div>
+                        {toolbarTrailing}
+                    </div>
                 </div>
-            )}
+            </div>
         </div>
     );
 }

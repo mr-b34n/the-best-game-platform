@@ -22,13 +22,18 @@ interface CreatePostPayload {
 
 // ─── Create post box ───────────────────────────────────────────────────────────
 const CreatePostBox = ({ onPost }: { onPost: (data: CreatePostPayload) => Promise<void> }) => {
+    const user = useAuthStore((state) => state.user);
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
     const [attachments, setAttachments] = useState<EditableAttachment[]>([]);
     const [expanded, setExpanded] = useState(false);
     const [isPosting, setIsPosting] = useState(false);
 
+    const isActive = expanded || content.trim().length > 0 || attachments.length > 0 || title.trim().length > 0;
     const canPost = content.trim().length > 0 && !isPosting;
+    const avatarUrl =
+        user?.user_metadata?.avatar_url ??
+        "https://api.dicebear.com/7.x/avataaars/svg?seed=Felix";
 
     const handlePost = async () => {
         if (!canPost) return;
@@ -47,25 +52,45 @@ const CreatePostBox = ({ onPost }: { onPost: (data: CreatePostPayload) => Promis
     };
 
     return (
-        <div id="create-post" className="
-            w-full flex flex-col gap-3 p-4
-            bg-surface/90 backdrop-blur-md
-            border border-border rounded-2xl
-            shadow-[0_2px_12px_rgba(0,0,0,0.06)]
-            dark:shadow-[0_2px_16px_rgba(0,0,0,0.30)]
-        ">
-            <div className="flex flex-row items-start gap-3">
-                <img src={avatarGame} alt="User" className="w-10 h-10 rounded-full object-cover ring-1 ring-border shrink-0 mt-0.5" />
-                <div className="flex flex-col gap-2 w-full min-w-0">
-                    {(expanded || title) && (
-                        <input
-                            type="text"
-                            value={title}
-                            onChange={(e) => setTitle(e.target.value)}
-                            placeholder="Post title"
-                            className="w-full h-10 px-4 bg-surface-hover border border-border rounded-full text-sm focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all text-text placeholder:text-text-faint"
-                        />
-                    )}
+        <div
+            id="create-post"
+            className="
+                w-full p-3
+                bg-surface/90 backdrop-blur-md
+                border border-border rounded-2xl
+                shadow-[0_2px_12px_rgba(0,0,0,0.06)]
+                dark:shadow-[0_2px_16px_rgba(0,0,0,0.30)]
+                transition-all duration-200 ease-out
+            "
+        >
+            <div className="flex gap-2.5 items-start">
+                <img
+                    src={avatarUrl}
+                    alt="User"
+                    className={`w-9 h-9 rounded-full object-cover ring-1 ring-border shrink-0 transition-all duration-200 ease-out ${
+                        isActive ? "" : "self-center"
+                    }`}
+                />
+                <div className="flex flex-col gap-1.5 w-full min-w-0">
+                    <div
+                        className={`grid transition-[grid-template-rows,opacity,margin] duration-200 ease-out ${
+                            isActive
+                                ? "grid-rows-[1fr] opacity-100"
+                                : "grid-rows-[0fr] opacity-0 -mb-1.5 pointer-events-none"
+                        }`}
+                        aria-hidden={!isActive}
+                    >
+                        <div className="overflow-hidden min-h-0">
+                            <input
+                                type="text"
+                                value={title}
+                                onChange={(e) => setTitle(e.target.value)}
+                                placeholder="Post title (optional)"
+                                tabIndex={isActive ? 0 : -1}
+                                className="w-full h-9 px-3 bg-surface-hover border border-border rounded-xl text-sm focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all text-text placeholder:text-text-faint"
+                            />
+                        </div>
+                    </div>
                     <textarea
                         value={content}
                         onChange={(e) => setContent(e.target.value)}
@@ -74,27 +99,33 @@ const CreatePostBox = ({ onPost }: { onPost: (data: CreatePostPayload) => Promis
                             if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) handlePost();
                         }}
                         placeholder="What's on your mind?"
-                        rows={expanded || content || attachments.length > 0 ? 3 : 1}
-                        className="w-full px-4 py-2.5 bg-surface-hover border border-border rounded-2xl text-sm focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all text-text placeholder:text-text-faint resize-none"
+                        rows={1}
+                        className={`w-full px-3 py-2 bg-surface-hover border border-border rounded-xl text-sm focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-[min-height,border-color,box-shadow] duration-200 ease-out text-text placeholder:text-text-faint resize-none leading-snug ${
+                            isActive ? "min-h-[4.75rem]" : "min-h-[2.25rem]"
+                        }`}
                     />
 
                     <AttachmentPicker
                         attachments={attachments}
                         onChange={setAttachments}
-                    />
-
-                    <div className="flex flex-row justify-end">
-                        <button
-                            onClick={handlePost}
-                            disabled={!canPost}
-                            className={`px-5 py-1.5 rounded-full text-sm font-semibold transition-all ${canPost
-                                    ? "bg-primary text-white hover:bg-primary-hover shadow-[0_2px_10px_rgba(124,77,255,0.35)] hover:-translate-y-0.5"
-                                    : "bg-surface-hover text-text-faint cursor-not-allowed"
+                        showToolbar={isActive}
+                        compactToolbar
+                        className="gap-1.5"
+                        toolbarTrailing={
+                            <button
+                                type="button"
+                                onClick={handlePost}
+                                disabled={!canPost}
+                                className={`shrink-0 px-4 py-1.5 rounded-full text-sm font-semibold transition-all ${
+                                    canPost
+                                        ? "bg-primary text-white hover:bg-primary-hover shadow-[0_2px_10px_rgba(124,77,255,0.35)]"
+                                        : "bg-surface-hover text-text-faint cursor-not-allowed"
                                 }`}
-                        >
-                            {isPosting ? "Posting..." : "Post"}
-                        </button>
-                    </div>
+                            >
+                                {isPosting ? "Posting..." : "Post"}
+                            </button>
+                        }
+                    />
                 </div>
             </div>
         </div>
