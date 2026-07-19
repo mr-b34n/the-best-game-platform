@@ -7,9 +7,9 @@ import {
     faBell,
     faSun,
     faMoon,
-} from "@fortawesome/free-regular-svg-icons";
-
-const isLoggedIn = true; // TODO: thay bằng state auth thật
+    faSignOutAlt,
+} from "@fortawesome/free-solid-svg-icons";
+import { useAuthStore } from '../../stores/useAuthStore';
 
 // ─── Floating card base ────────────────────────────────────────────────────────
 const floatCard = `
@@ -24,6 +24,13 @@ export const Header = () => {
     const theme = useThemeStore((state) => state.theme);
     const toggleTheme = useThemeStore((state) => state.toggleTheme);
     const navigate = useNavigate();
+
+    // Use real user from Supabase store, but provide a mock override for testing UI
+    const user = useAuthStore((state) => state.user);
+    const mockLogin = useAuthStore((state) => state.mockLogin);
+    const toggleMockLogin = useAuthStore((state) => state.toggleMockLogin);
+    
+    const isLoggedIn = !!user || mockLogin;
 
     return (
         // Header wrapper — full-width row, no background itself
@@ -76,18 +83,43 @@ export const Header = () => {
                         ring-2 ring-surface" />
                 </button>
 
-                {/* Profile / Login */}
+                {/* Mock toggle for testing UI (DEV) */}
+                <div className="relative group/dev">
+                    <button
+                        onClick={toggleMockLogin}
+                        title={isLoggedIn ? "[DEV] Mock Logout" : "[DEV] Mock Login"}
+                        className={`w-9 h-9 flex items-center justify-center rounded-full
+                            transition-colors duration-150 cursor-pointer
+                            ${isLoggedIn
+                                ? "text-amber-500 bg-amber-500/10 hover:bg-amber-500/20"
+                                : "text-text-muted hover:bg-amber-500/20 hover:text-amber-500"
+                            }`}
+                    >
+                        <FontAwesomeIcon icon={isLoggedIn ? faSignOutAlt : faUserCircle} />
+                    </button>
+                    <span className="pointer-events-none absolute -top-1 -right-1 text-[9px] font-black text-amber-500 bg-amber-500/15 px-0.5 rounded">
+                        DEV
+                    </span>
+                </div>
+
+                {/* Profile / Login Button */}
                 {!isLoggedIn && (
                     <button
                         onClick={() => navigate({ to: "/auth" })}
-                        title="Sign in"
-                        className="w-9 h-9 flex items-center justify-center rounded-full
-                            text-text-muted
-                            hover:bg-primary-soft hover:text-primary
-                            transition-colors duration-150 cursor-pointer"
+                        className="h-9 px-4 ml-1 flex items-center justify-center rounded-full
+                            bg-primary text-white font-semibold text-sm
+                            hover:bg-primary-hover shadow-sm transition-colors duration-150 cursor-pointer"
                     >
-                        <FontAwesomeIcon icon={faUserCircle} />
+                        Login
                     </button>
+                )}
+                {isLoggedIn && (
+                    <img 
+                        src={user?.user_metadata?.avatar_url ?? "https://api.dicebear.com/7.x/avataaars/svg?seed=Felix"}
+                        alt="Profile" 
+                        onClick={() => user && navigate({ to: "/profile/$userId", params: { userId: user.id } })}
+                        className="w-9 h-9 ml-1 rounded-full object-cover ring-2 ring-border shrink-0 cursor-pointer hover:opacity-80 transition-opacity" 
+                    />
                 )}
             </div>
         </header>

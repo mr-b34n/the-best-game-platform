@@ -1,30 +1,11 @@
-import { faArrowTrendUp, faCircle, faGamepad } from "@fortawesome/free-solid-svg-icons"
-import { faLightbulb as faLightbulbOutline } from "@fortawesome/free-regular-svg-icons";
-import { faLightbulb as faLightbulbSolid } from "@fortawesome/free-solid-svg-icons";
+import { faArrowTrendUp, faGamepad, faCalendarDay, faUsers, faBolt } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { useThemeStore } from "../../stores/useThemeStore";
+import { useNavigate } from "@tanstack/react-router"
 
-import avatarGame from "../../assets/logos/raft-logo.png";
-import raftLogo from "../../assets/logos/raft-logo.png";
-import rdr2Logo from "../../assets/logos/rdr2-logo.png";
-import cs2Logo from "../../assets/logos/cs2-logo.webp";
-
-// ─── Tag colour palette ────────────────────────────────────────────────────────
-const TAG_CLASSES = [
-    "bg-tag-1/10 text-tag-1",
-    "bg-tag-2/10 text-tag-2",
-    "bg-tag-3/10 text-tag-3",
-    "bg-tag-4/10 text-tag-4",
-    "bg-tag-5/10 text-tag-5",
-];
-
-// ─── Squad online mock data ────────────────────────────────────────────────────
-const SQUAD_MEMBERS = [
-    { name: "GhostRider",    game: "RDR 2",   logo: rdr2Logo, status: "online"  },
-    { name: "TacticalGamer", game: "CS 2",    logo: cs2Logo,  status: "online"  },
-    { name: "NightOwl",      game: "Raft",    logo: raftLogo, status: "online"  },
-    { name: "MapMaker",      game: "—",       logo: null,     status: "offline" },
-] as const;
+import raftLogo    from "../../assets/logos/raft-logo.png";
+import rdr2Logo    from "../../assets/logos/rdr2-logo.png";
+import cs2Logo     from "../../assets/logos/cs2-logo.webp";
+import avatarGame  from "../../assets/logos/raft-logo.png";
 
 // ─── Shared floating panel ─────────────────────────────────────────────────────
 const Panel = ({ children }: { children: React.ReactNode }) => (
@@ -33,114 +14,124 @@ const Panel = ({ children }: { children: React.ReactNode }) => (
         bg-surface/90 backdrop-blur-md
         border border-border
         rounded-2xl
-        shadow-[0_4px_20px_rgba(0,0,0,0.07)]
-        dark:shadow-[0_4px_24px_rgba(0,0,0,0.35)]
     ">
         {children}
     </div>
 );
 
-// ─── Panel header row ──────────────────────────────────────────────────────────
-const PanelHeader = ({
-    icon,
-    iconBg,
-    iconColor,
-    title,
-    badge,
-}: {
-    icon: typeof faArrowTrendUp;
-    iconBg: string;
-    iconColor: string;
-    title: string;
-    badge?: number;
-}) => (
-    <div className="flex flex-row items-center gap-2.5 px-4 py-3 border-b border-border">
-        <div className={`w-7 h-7 flex items-center justify-center rounded-lg ${iconBg} ${iconColor}`}>
-            <FontAwesomeIcon icon={icon} className="text-sm" />
-        </div>
-        <p className="font-semibold text-sm text-text flex-1">{title}</p>
-        {badge !== undefined && (
-            <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full
-                bg-success-500/15 text-success-500">
-                {badge} online
-            </span>
-        )}
+// ─── Panel title ───────────────────────────────────────────────────────────────
+const SectionTitle = ({ icon, label, extra }: { icon: typeof faArrowTrendUp; label: string; extra?: React.ReactNode }) => (
+    <div className="flex items-center gap-2 px-4 pt-3.5 pb-2">
+        <FontAwesomeIcon icon={icon} className="text-[13px] text-text-muted" />
+        <span className="text-xs font-bold uppercase tracking-widest text-text-muted flex-1">{label}</span>
+        {extra}
     </div>
 );
 
+// ─── Squad online data ─────────────────────────────────────────────────────────
+const SQUAD_MEMBERS = [
+    { name: "GhostRider",    game: "Red Dead 2",    logo: rdr2Logo, status: "online",  playtime: "2h 14m" },
+    { name: "TacticalXeno",  game: "CS2 — Rank S",  logo: cs2Logo,  status: "online",  playtime: "45m"    },
+    { name: "NightOwl",      game: "Raft",           logo: raftLogo, status: "online",  playtime: "1h 03m" },
+    { name: "Maplestrike",   game: null,             logo: null,     status: "offline", playtime: null     },
+];
+
+// ─── Trending data ─────────────────────────────────────────────────────────────
+const TRENDING_POSTS = [
+    {
+        id: 1,
+        postId: 5,
+        title: "Patch 1.6 just dropped – what are your thoughts?",
+        game: "CS2",
+        gameLogo: cs2Logo,
+        replies: 142,
+        heat: "🔥 Hot",
+    },
+    {
+        id: 2,
+        postId: 6,
+        title: "Best farming spot after the loot cave nerf?",
+        game: "Raft",
+        gameLogo: raftLogo,
+        replies: 87,
+        heat: "⚡ Rising",
+    },
+    {
+        id: 3,
+        postId: 3,
+        title: "Legendary run – Red Harlow tribute build",
+        game: "RDR 2",
+        gameLogo: rdr2Logo,
+        replies: 61,
+        heat: "⭐ Popular",
+    },
+];
+
+// ─── Events data ───────────────────────────────────────────────────────────────
+const EVENTS = [
+    { id: 1, label: "CS2 Major — Quarterfinals", date: "Jul 20", color: "bg-rose-500" },
+    { id: 2, label: "IndieG Community Game Night", date: "Jul 22", color: "bg-primary" },
+    { id: 3, label: "Raft Summer Fest Update", date: "Jul 25", color: "bg-emerald-500" },
+];
+
 // ─── RightBar ─────────────────────────────────────────────────────────────────
 export const RightBar = () => {
-    const theme = useThemeStore((state) => state.theme);
-
+    const navigate = useNavigate();
     const onlineCount = SQUAD_MEMBERS.filter((m) => m.status === "online").length;
 
     return (
         <div className="w-full flex flex-col gap-3">
 
-            {/* ── Squad Online panel ─────────────────────────────── */}
+            {/* ── Squad Online ──────────────────────────────────────── */}
             <Panel>
-                <PanelHeader
+                <SectionTitle
                     icon={faGamepad}
-                    iconBg="bg-success-500/10"
-                    iconColor="text-success-500"
-                    title="Squad"
-                    badge={onlineCount}
+                    label="Squad"
+                    extra={
+                        <span className="flex items-center gap-1 text-[11px] font-semibold text-emerald-500 bg-emerald-500/10 px-2 py-0.5 rounded-full">
+                            <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
+                            {onlineCount} online
+                        </span>
+                    }
                 />
-
-                <div className="flex flex-col p-2 gap-0.5">
-                    {SQUAD_MEMBERS.map((member) => {
-                        const isOnline = member.status === "online";
+                <div className="flex flex-col pb-2 px-2 gap-0.5">
+                    {SQUAD_MEMBERS.map((m) => {
+                        const online = m.status === "online";
                         return (
                             <div
-                                key={member.name}
-                                className="flex flex-row items-center gap-3 px-2 py-2
-                                    rounded-xl cursor-pointer
-                                    hover:bg-surface-hover
-                                    transition-colors duration-150"
+                                key={m.name}
+                                className="flex items-center gap-3 px-2 py-1.5 rounded-xl hover:bg-surface-hover transition-colors cursor-pointer group"
                             >
-                                {/* Avatar with online dot */}
+                                {/* Avatar + online dot */}
                                 <div className="relative shrink-0">
                                     <img
                                         src={avatarGame}
-                                        alt={member.name}
-                                        className={`w-8 h-8 rounded-full object-cover ring-1
-                                            ${isOnline ? "ring-success-500/40" : "ring-border opacity-50"}`}
+                                        alt={m.name}
+                                        className={`w-8 h-8 rounded-full object-cover ring-1 ${online ? "ring-emerald-500/40" : "ring-border opacity-40"}`}
                                     />
-                                    <span className={`absolute -bottom-0.5 -right-0.5
-                                        w-2.5 h-2.5 rounded-full ring-2 ring-surface
-                                        ${isOnline ? "bg-success-500" : "bg-neutral-400"}`}
-                                    />
+                                    <span className={`absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full ring-2 ring-surface ${online ? "bg-emerald-500" : "bg-neutral-400"}`} />
                                 </div>
 
-                                {/* Name + game */}
+                                {/* Info */}
                                 <div className="flex flex-col min-w-0 flex-1">
-                                    <p className={`text-sm font-medium truncate
-                                        ${isOnline ? "text-text" : "text-text-faint"}`}>
-                                        {member.name}
+                                    <p className={`text-sm font-semibold truncate ${online ? "text-text" : "text-text-faint"}`}>
+                                        {m.name}
                                     </p>
-                                    {isOnline && member.logo && (
-                                        <div className="flex flex-row items-center gap-1.5 mt-0.5">
-                                            <img
-                                                src={member.logo}
-                                                alt={member.game}
-                                                className="w-3 h-3 rounded object-cover"
-                                            />
-                                            <p className="text-[11px] text-text-faint truncate">
-                                                {member.game}
-                                            </p>
+                                    {online && m.game ? (
+                                        <div className="flex items-center gap-1.5 mt-0.5">
+                                            {m.logo && <img src={m.logo} alt="" className="w-3 h-3 rounded object-cover opacity-80" />}
+                                            <p className="text-[11px] text-text-faint truncate">{m.game}</p>
                                         </div>
-                                    )}
-                                    {!isOnline && (
+                                    ) : (
                                         <p className="text-[11px] text-text-faint">Offline</p>
                                     )}
                                 </div>
 
-                                {/* Online pulse or offline indicator */}
-                                {isOnline && (
-                                    <FontAwesomeIcon
-                                        icon={faCircle}
-                                        className="text-[6px] text-success-500 shrink-0 animate-pulse"
-                                    />
+                                {/* Playtime pill */}
+                                {online && m.playtime && (
+                                    <span className="text-[10px] text-text-faint shrink-0 group-hover:text-text-muted transition-colors">
+                                        {m.playtime}
+                                    </span>
                                 )}
                             </div>
                         );
@@ -148,47 +139,35 @@ export const RightBar = () => {
                 </div>
             </Panel>
 
-            {/* ── Trending panel ─────────────────────────────────── */}
+            {/* ── Trending Discussions ──────────────────────────────── */}
             <Panel>
-                <PanelHeader
-                    icon={faArrowTrendUp}
-                    iconBg="bg-accent-500/10"
-                    iconColor="text-accent-500"
-                    title="Trending"
-                />
-
-                <div className="flex flex-col p-2 gap-0.5">
-                    {[1, 2, 3].map((rank) => (
+                <SectionTitle icon={faArrowTrendUp} label="Trending" />
+                <div className="flex flex-col pb-2 px-2 gap-0.5">
+                    {TRENDING_POSTS.map((post, i) => (
                         <div
-                            key={rank}
-                            className="flex flex-row items-center gap-3 px-2 py-2
-                                rounded-xl cursor-pointer
-                                hover:bg-surface-hover
-                                transition-colors duration-150"
+                            key={post.id}
+                            onClick={() => navigate({ to: "/post/$postId", params: { postId: post.postId.toString() } })}
+                            className="flex items-start gap-3 px-2 py-2 rounded-xl hover:bg-surface-hover transition-colors cursor-pointer group"
                         >
-                            <p className={`w-4 text-center text-xs font-bold shrink-0
-                                ${rank === 1 ? "text-accent-500" : "text-text-faint"}`}>
-                                {rank}
+                            {/* Rank */}
+                            <p className={`text-xs font-black w-4 text-center pt-0.5 shrink-0 ${i === 0 ? "text-rose-500" : i === 1 ? "text-amber-500" : "text-text-faint"}`}>
+                                {i + 1}
                             </p>
-                            <img
-                                src={avatarGame}
-                                alt=""
-                                className="w-9 h-9 shrink-0 rounded-lg object-cover ring-1 ring-border"
-                            />
+
+                            {/* Game logo */}
+                            <img src={post.gameLogo} alt={post.game} className="w-8 h-8 rounded-lg object-cover shrink-0 ring-1 ring-border" />
+
+                            {/* Info */}
                             <div className="flex flex-col gap-1 min-w-0 flex-1">
-                                <p className="font-medium text-sm text-text truncate">
-                                    Game Discussion Title {rank}
+                                <p className="text-sm font-medium text-text leading-tight line-clamp-2 group-hover:text-primary transition-colors">
+                                    {post.title}
                                 </p>
-                                <div className="flex flex-row flex-wrap gap-1">
-                                    {[1, 2, 3].map((t, idx) => (
-                                        <span
-                                            key={t}
-                                            className={`px-1.5 py-0.5 rounded-full text-[10px] font-semibold
-                                                ${TAG_CLASSES[idx % TAG_CLASSES.length]}`}
-                                        >
-                                            #Tag{t}
-                                        </span>
-                                    ))}
+                                <div className="flex items-center gap-2 text-[11px] text-text-faint">
+                                    <span className="font-semibold text-text-muted">{post.game}</span>
+                                    <span>·</span>
+                                    <FontAwesomeIcon icon={faUsers} className="text-[10px]" />
+                                    <span>{post.replies} replies</span>
+                                    <span className="ml-auto shrink-0">{post.heat}</span>
                                 </div>
                             </div>
                         </div>
@@ -196,49 +175,26 @@ export const RightBar = () => {
                 </div>
             </Panel>
 
-            {/* ── Recommended panel ──────────────────────────────── */}
+            {/* ── Upcoming Events ──────────────────────────────────── */}
             <Panel>
-                <PanelHeader
-                    icon={theme === "light" ? faLightbulbSolid : faLightbulbOutline}
-                    iconBg="bg-primary-soft"
-                    iconColor="text-primary"
-                    title="Recommended"
-                />
-
-                <div className="flex flex-col p-2 gap-0.5">
-                    {[1, 2, 3].map((item) => (
-                        <div
-                            key={item}
-                            className="flex flex-row items-center gap-3 px-2 py-2
-                                rounded-xl cursor-pointer
-                                hover:bg-surface-hover
-                                transition-colors duration-150"
-                        >
-                            <img
-                                src={avatarGame}
-                                alt=""
-                                className="w-9 h-9 shrink-0 rounded-lg object-cover ring-1 ring-border"
-                            />
-                            <div className="flex flex-col gap-1 min-w-0 flex-1">
-                                <p className="font-medium text-sm text-text truncate">
-                                    Game Discussion Title {item}
+                <SectionTitle icon={faCalendarDay} label="Upcoming" />
+                <div className="flex flex-col pb-3 px-4 gap-2.5">
+                    {EVENTS.map((ev) => (
+                        <div key={ev.id} className="flex items-center gap-3 cursor-pointer group">
+                            <div className={`w-1 h-8 rounded-full shrink-0 ${ev.color}`} />
+                            <div className="flex flex-col min-w-0 flex-1">
+                                <p className="text-sm font-medium text-text group-hover:text-primary transition-colors leading-tight truncate">
+                                    {ev.label}
                                 </p>
-                                <div className="flex flex-row items-center gap-1.5 text-xs">
-                                    <span className="text-text-faint">by</span>
-                                    <span className="
-                                        px-1.5 py-0.5 rounded-full
-                                        bg-tag-4/10 text-tag-4
-                                        font-semibold text-[10px]
-                                        hover:bg-tag-4/20 transition-colors cursor-pointer
-                                    ">
-                                        User123
-                                    </span>
-                                </div>
+                                <p className="text-[11px] text-text-faint">{ev.date}</p>
                             </div>
+                            <FontAwesomeIcon icon={faBolt} className="text-[11px] text-text-faint group-hover:text-primary transition-colors shrink-0" />
                         </div>
                     ))}
                 </div>
             </Panel>
+
+            
         </div>
     )
 }

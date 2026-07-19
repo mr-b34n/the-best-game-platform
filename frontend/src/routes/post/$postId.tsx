@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate, notFound } from '@tanstack/react-router'
+import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { Post } from '../../components/feed/Post';
@@ -9,8 +9,8 @@ import { Header } from '../../components/header/Header';
 import { LeftBar } from '../../components/sidebars/LeftBar';
 import { RightBar } from '../../components/sidebars/RightBar';
 
-// Import ALL_POSTS to get actual mock data
-import { ALL_POSTS } from '../../components/feed/FeedList';
+import { usePostsStore } from '../../stores/usePostsStore';
+import { getCurrentAuthor } from '../../helpers/post/getCurrentAuthor';
 import { useTheme } from '../../helpers/theme/useTheme';
 
 export const Route = createFileRoute('/post/$postId')({
@@ -24,8 +24,22 @@ function PostDetail() {
     const { postId } = Route.useParams();
     const navigate = useNavigate();
 
-    // Fetch the correct post from our mock feed based on ID
-    const post = ALL_POSTS.find((p) => p.id.toString() === postId.toString());
+    const post = usePostsStore((state) => state.getPostById(postId));
+    const updatePost = usePostsStore((state) => state.updatePost);
+    const deletePost = usePostsStore((state) => state.deletePost);
+    const currentAuthor = getCurrentAuthor();
+
+    const handleEditPost = (id: string | number, data: { title: string; content: string }) => {
+        updatePost(id, {
+            title: data.title || data.content.slice(0, 80) + (data.content.length > 80 ? "..." : ""),
+            content: data.content,
+        });
+    };
+
+    const handleDeletePost = (id: string | number) => {
+        deletePost(id);
+        navigate({ to: '/' });
+    };
 
     if (!post) {
         return (
@@ -43,7 +57,7 @@ function PostDetail() {
             <div className="absolute inset-0 pointer-events-none select-none">
                 <div className="absolute inset-0
                     bg-[radial-gradient(circle,#c7c2dc_1px,transparent_1px)]
-                    dark:bg-[radial-gradient(circle,#2a2440_1px,transparent_1px)]
+                    dark:bg-[radial-gradient(circle,#2a2a3c_1px,transparent_1px)]
                     bg-size-[1.75rem_1.75rem]
                     opacity-50 dark:opacity-60"
                 />
@@ -67,7 +81,7 @@ function PostDetail() {
                     px-4 py-3 pb-12">
 
                     {/* Left sidebar */}
-                    <aside className="hidden lg:block shrink-0 w-60 sticky top-3">
+                    <aside className="hidden lg:block shrink-0 w-60 sticky top-3 max-h-[calc(100vh-5rem)] overflow-y-auto scrollbar-none">
                         <LeftBar />
                     </aside>
 
@@ -93,7 +107,13 @@ function PostDetail() {
 
                             {/* Main post */}
                             <div className="w-full">
-                                <Post post={post} />
+                                <Post
+                                    post={post}
+                                    isOwner={post.author === currentAuthor}
+                                    isDetailView
+                                    onEdit={handleEditPost}
+                                    onDelete={handleDeletePost}
+                                />
                             </div>
 
                             {/* Comment section */}
@@ -102,7 +122,7 @@ function PostDetail() {
                     </main>
 
                     {/* Right sidebar */}
-                    <aside className="hidden xl:block shrink-0 w-72 sticky top-3">
+                    <aside className="hidden xl:block shrink-0 w-72 sticky top-3 max-h-[calc(100vh-5rem)] overflow-y-auto scrollbar-none">
                         <RightBar />
                     </aside>
                 </div>

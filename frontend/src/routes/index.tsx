@@ -13,13 +13,6 @@ const Home = () => {
 
 			{/* ── Decorative background layer ── */}
 			<div className="absolute inset-0 pointer-events-none select-none">
-				{/* Dot grid */}
-				<div className="absolute inset-0
-                    bg-[radial-gradient(circle,#c7c2dc_1px,transparent_1px)]
-                    dark:bg-[radial-gradient(circle,#2a2440_1px,transparent_1px)]
-                    bg-size-[1.75rem_1.75rem]
-                    opacity-50 dark:opacity-60"
-				/>
 				{/* Ambient purple glow — top-left */}
 				<div className="absolute -top-32 -left-32 w-125 h-125
                     bg-primary/10 dark:bg-primary/15
@@ -41,8 +34,8 @@ const Home = () => {
                     flex flex-row items-start gap-4
                     px-4 py-3 pb-12">
 
-					{/* Left sidebar — sticky */}
-					<aside className="hidden lg:block shrink-0 w-60 sticky top-3">
+					{/* Left sidebar — sticky + independent scroll */}
+					<aside className="hidden lg:block shrink-0 w-60 sticky top-3 max-h-[calc(100vh-5rem)] overflow-y-auto scrollbar-none">
 						<LeftBar />
 					</aside>
 
@@ -51,8 +44,8 @@ const Home = () => {
 						<FeedList />
 					</main>
 
-					{/* Right sidebar — sticky */}
-					<aside className="hidden xl:block shrink-0 w-72 sticky top-3">
+					{/* Right sidebar — sticky + independent scroll */}
+					<aside className="hidden xl:block shrink-0 w-72 sticky top-3 max-h-[calc(100vh-5rem)] overflow-y-auto scrollbar-none">
 						<RightBar />
 					</aside>
 				</div>

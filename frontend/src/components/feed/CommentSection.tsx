@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart as faHeartOutline } from "@fortawesome/free-regular-svg-icons";
-import { faHeart as faHeartSolid, faPaperPlane, faReply } from "@fortawesome/free-solid-svg-icons";
+import { faHeart as faHeartSolid, faReply, faImage, faFaceSmile } from "@fortawesome/free-solid-svg-icons";
+import { useNavigate } from "@tanstack/react-router";
 
 import avatarUser from "../../assets/logos/raft-logo.png"; // mock avatar
+import { useAuthStore } from "../../stores/useAuthStore";
 
 // ─── Comment mock data types ───────────────────────────────────────────────────
 export interface CommentData {
@@ -13,6 +15,10 @@ export interface CommentData {
     content: string;
     timeAgo: string;
     likes: number;
+}
+
+interface CommentSectionProps {
+    postId: string;
 }
 
 // ─── Individual Comment Component ──────────────────────────────────────────────
@@ -65,7 +71,13 @@ const CommentItem = ({ comment }: { comment: CommentData }) => {
 };
 
 // ─── Comment Section Component ─────────────────────────────────────────────────
-export const CommentSection = ({ postId }: { postId: string }) => {
+export const CommentSection = ({ postId }: CommentSectionProps) => {
+    const [commentText, setCommentText] = useState("");
+    const user = useAuthStore((state) => state.user);
+    const mockLogin = useAuthStore((state) => state.mockLogin);
+    const isLoggedIn = !!user || mockLogin;
+    const navigate = useNavigate();
+
     // Mock comments state
     const [comments, setComments] = useState<CommentData[]>([
         {
@@ -86,23 +98,24 @@ export const CommentSection = ({ postId }: { postId: string }) => {
         },
     ]);
 
-    const [inputValue, setInputValue] = useState("");
+    const handleInput = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+        setCommentText(e.target.value);
+        e.target.style.height = "auto";
+        e.target.style.height = `${e.target.scrollHeight}px`;
+    };
 
-    const handleCommentSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        if (!inputValue.trim()) return;
-
+    const handleReplySubmit = () => {
+        if (!commentText.trim()) return;
         const newComment: CommentData = {
-            id: Date.now(),
-            author: "You", // Mock current user
+            id: `${postId}-${Date.now()}`,
+            author: "You",
             authorAvatar: avatarUser,
-            content: inputValue,
-            timeAgo: "Vừa xong",
+            content: commentText.trim(),
+            timeAgo: "Just now",
             likes: 0,
         };
-
-        setComments([...comments, newComment]);
-        setInputValue("");
+        setComments((prev) => [...prev, newComment]);
+        setCommentText("");
     };
 
     return (
@@ -113,49 +126,54 @@ export const CommentSection = ({ postId }: { postId: string }) => {
                 Comments <span className="text-text-muted font-normal text-base ml-1">{comments.length}</span>
             </h3>
 
-            {/* Comment Box */}
-            <div className="flex flex-row items-start gap-3 px-4 mb-6">
-                <img
-                    src={avatarUser}
-                    alt="You"
-                    className="w-10 h-10 rounded-full object-cover shrink-0 mt-1"
-                />
-                <form 
-                    onSubmit={handleCommentSubmit}
-                    className="flex-1 flex flex-col gap-2 relative"
-                >
-                    <textarea
-                        value={inputValue}
-                        onChange={(e) => setInputValue(e.target.value)}
-                        placeholder="Phản hồi của bạn..."
-                        className="
-                            w-full bg-transparent border-none focus:outline-none focus:ring-0
-                            text-lg text-text placeholder:text-text-faint
-                            resize-none min-h-[44px] max-h-[200px] py-2
-                        "
-                        rows={1}
-                        onInput={(e) => {
-                            e.currentTarget.style.height = "auto";
-                            e.currentTarget.style.height = `${e.currentTarget.scrollHeight}px`;
-                        }}
-                    />
-                    <div className="flex flex-row items-center justify-between pt-2 border-t border-border/50">
-                        <div className="text-xs text-text-faint">Bất kỳ ai cũng có thể trả lời</div>
-                        <button
-                            type="submit"
-                            disabled={!inputValue.trim()}
-                            className={`
-                                px-4 py-1.5 rounded-full text-sm font-bold
-                                transition-all duration-200
-                                ${inputValue.trim() 
-                                    ? "bg-primary text-white hover:bg-primary-hover shadow-[0_2px_10px_rgba(124,77,255,0.35)]" 
-                                    : "bg-surface-hover text-text-faint cursor-not-allowed opacity-70"}
-                            `}
+            {/* Comment Input Area */}
+            <div className="flex flex-row gap-3 px-4 mb-6">
+                {isLoggedIn ? (
+                    <>
+                        <img src={avatarUser} alt="You" className="w-9 h-9 rounded-full object-cover ring-1 ring-border shrink-0" />
+                        <div className="flex flex-col flex-1 gap-2">
+                            <textarea
+                                value={commentText}
+                                onChange={handleInput}
+                                placeholder="Post your reply..."
+                                className="w-full bg-transparent text-[15px] text-text placeholder:text-text-faint resize-none overflow-hidden focus:outline-none min-h-[24px]"
+                                rows={1}
+                            />
+                            <div className="flex flex-row justify-between items-center pt-2 border-t border-border">
+                                <div className="flex flex-row gap-1">
+                                    <button className="w-8 h-8 rounded-full flex items-center justify-center text-text-muted hover:bg-surface-hover hover:text-primary transition-colors" title="Add image">
+                                        <FontAwesomeIcon icon={faImage} className="text-sm" />
+                                    </button>
+                                    <button className="w-8 h-8 rounded-full flex items-center justify-center text-text-muted hover:bg-surface-hover hover:text-primary transition-colors" title="Add emoji">
+                                        <FontAwesomeIcon icon={faFaceSmile} className="text-sm" />
+                                    </button>
+                                </div>
+                                <button 
+                                    onClick={handleReplySubmit}
+                                    disabled={!commentText.trim()}
+                                    className={`px-4 py-1.5 rounded-full font-bold text-sm transition-colors ${
+                                        commentText.trim() 
+                                        ? "bg-primary text-white hover:bg-primary-hover" 
+                                        : "bg-surface-hover text-text-faint cursor-not-allowed"
+                                    }`}
+                                >
+                                    Reply
+                                </button>
+                            </div>
+                        </div>
+                    </>
+                ) : (
+                    <div className="w-full flex flex-col items-center justify-center p-6 bg-surface-hover/50 rounded-xl border border-border">
+                        <p className="font-semibold text-text mb-2">Join the discussion</p>
+                        <p className="text-sm text-text-muted mb-4">You need to be logged in to leave a comment.</p>
+                        <button 
+                            onClick={() => navigate({ to: "/auth" })}
+                            className="px-6 py-2 bg-primary text-white font-bold rounded-full hover:bg-primary-hover transition-colors shadow-sm"
                         >
-                            Reply
+                            Log in / Sign up
                         </button>
                     </div>
-                </form>
+                )}
             </div>
 
             {/* List of comments */}

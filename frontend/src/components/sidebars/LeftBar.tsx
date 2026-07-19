@@ -46,8 +46,6 @@ export const LeftBar = () => {
             bg-surface/90 backdrop-blur-md
             border border-border
             rounded-2xl
-            shadow-[0_4px_20px_rgba(0,0,0,0.07)]
-            dark:shadow-[0_4px_24px_rgba(0,0,0,0.35)]
         ">
 
             {/* ── Profile card ──────────────────────────────────── */}
@@ -112,7 +110,9 @@ export const LeftBar = () => {
 
             {/* ── Create post ───────────────────────────────────── */}
             <div className="px-3 pt-2.5 pb-1">
-                <button className="
+                <button
+                    onClick={() => document.getElementById("create-post")?.scrollIntoView({ behavior: "smooth", block: "center" })}
+                    className="
                     w-full flex flex-row items-center justify-center gap-2
                     px-3 py-2 rounded-xl
                     bg-primary hover:bg-primary-hover

@@ -104,20 +104,20 @@ const Auth = () => {
 	};
 
 	return (
-		<div className="flex flex-col md:flex-row w-screen h-screen bg-white dark:bg-black transition-colors">
+		<div className="flex flex-col md:flex-row w-screen h-screen bg-white dark:bg-bg transition-colors">
 			{/* LEFT COLUMN: INTRO & GRID PATTERN */}
-			<div className="relative hidden md:flex flex-col items-center justify-center w-full h-full bg-[#E0F2FE] dark:bg-slate-950 p-8 overflow-hidden">
+			<div className="relative hidden md:flex flex-col items-center justify-center w-full h-full bg-[#E0F2FE] dark:bg-neutral-950 p-8 overflow-hidden">
 				<div
 					className="absolute inset-0 
                     bg-[linear-gradient(to_right,#93C5FD_1px,transparent_1px),linear-gradient(to_bottom,#93C5FD_1px,transparent_1px)] 
-                    dark:bg-[linear-gradient(to_right,#1E293B_1px,transparent_1px),linear-gradient(to_bottom,#1E293B_1px,transparent_1px)] 
+                    dark:bg-[linear-gradient(to_right,#1e1e2a_1px,transparent_1px),linear-gradient(to_bottom,#1e1e2a_1px,transparent_1px)] 
                     bg-size-[1.5rem_1.5rem] 
                     mask-[radial-gradient(ellipse_80%_80%_at_50%_50%,#000_70%,transparent_100%)] 
                     opacity-60 dark:opacity-80 
                     pointer-events-none"
 				/>
 
-				<div className="z-10 w-fit h-fit self-start text-black dark:text-white text-5xl font-bold translate-x-20">
+				<div className="z-10 w-fit h-fit self-start text-black dark:text-text text-5xl font-bold translate-x-20">
 					<p>IndieG</p>
 				</div>
 				<img
@@ -125,18 +125,18 @@ const Auth = () => {
 					className="z-10 w-full max-w-lg h-auto my-4 drop-shadow-xl"
 					alt="Game Illustration"
 				/>
-				<div className="z-10 w-fit h-fit text-black dark:text-white text-3xl font-bold -translate-x-20 pb-4">
+				<div className="z-10 w-fit h-fit text-black dark:text-text text-3xl font-bold -translate-x-20 pb-4">
 					<p>Connect Your Squad</p>
 				</div>
-				<div className="z-10 w-fit h-fit text-black dark:text-white text-3xl font-bold translate-x-20">
+				<div className="z-10 w-fit h-fit text-black dark:text-text text-3xl font-bold translate-x-20">
 					<p>Elevate your game</p>
 				</div>
 			</div>
 
 			{/* RIGHT COLUMN: AUTH FORM */}
-			<div className="flex flex-col items-center justify-center w-full h-full bg-[#F8FAFC] dark:bg-gray-900 p-6 overflow-y-auto">
+			<div className="flex flex-col items-center justify-center w-full h-full bg-[#F8FAFC] dark:bg-bg p-6 overflow-y-auto">
 				<div className="w-full max-w-sm text-center md:text-left mb-2 mt-4 md:mt-0">
-					<h1 className="text-4xl md:text-5xl font-bold text-black dark:text-white transition-all">
+					<h1 className="text-4xl md:text-5xl font-bold text-black dark:text-text transition-all">
 						{isLogin ? "Welcome!" : "Join Us!"}
 					</h1>
 				</div>
@@ -149,17 +149,17 @@ const Auth = () => {
 						<div className="flex flex-col gap-1 group">
 							<label
 								htmlFor="username"
-								className="text-sm font-semibold text-[#475569] dark:text-gray-300"
+								className="text-sm font-semibold text-[#475569] dark:text-text-muted"
 							>
 								Username
 							</label>
-							<div className="flex flex-row items-center w-full rounded-md h-10 border border-[#374151] bg-white dark:bg-gray-800 px-3 transition-all group-focus-within:border-[#FF4A75] group-focus-within:ring-1 group-focus-within:ring-[#FF4A75]">
+							<div className="flex flex-row items-center w-full rounded-md h-10 border border-[#374151] dark:border-border bg-white dark:bg-surface-hover px-3 transition-all group-focus-within:border-[#FF4A75] group-focus-within:ring-1 group-focus-within:ring-[#FF4A75]">
 								<input
 									id="username"
 									type="text"
 									value={formData.username}
 									onChange={handleInputChange}
-									className="text-base w-full h-full focus:outline-none bg-transparent text-black dark:text-white"
+									className="text-base w-full h-full focus:outline-none bg-transparent text-black dark:text-text"
 									required={!isLogin}
 								/>
 							</div>
@@ -169,17 +169,17 @@ const Auth = () => {
 					<div className="flex flex-col gap-1 group">
 						<label
 							htmlFor="email"
-							className="text-sm font-semibold text-[#475569] dark:text-gray-300"
+							className="text-sm font-semibold text-[#475569] dark:text-text-muted"
 						>
 							Email
 						</label>
-						<div className="flex flex-row items-center w-full rounded-md h-10 border border-[#374151] bg-white dark:bg-gray-800 px-3 transition-all group-focus-within:border-[#FF4A75] group-focus-within:ring-1 group-focus-within:ring-[#FF4A75]">
+						<div className="flex flex-row items-center w-full rounded-md h-10 border border-[#374151] dark:border-border bg-white dark:bg-surface-hover px-3 transition-all group-focus-within:border-[#FF4A75] group-focus-within:ring-1 group-focus-within:ring-[#FF4A75]">
 							<input
 								id="email"
 								type="email"
 								value={formData.email}
 								onChange={handleInputChange}
-								className="text-base w-full h-full focus:outline-none bg-transparent text-black dark:text-white"
+								className="text-base w-full h-full focus:outline-none bg-transparent text-black dark:text-text"
 								required
 							/>
 						</div>
@@ -188,24 +188,24 @@ const Auth = () => {
 					<div className="flex flex-col gap-1 group">
 						<label
 							htmlFor="password"
-							className="text-sm font-semibold text-[#475569] dark:text-gray-300"
+							className="text-sm font-semibold text-[#475569] dark:text-text-muted"
 						>
 							Password
 						</label>
-						<div className="flex flex-row items-center gap-2 w-full rounded-md h-10 border border-[#374151] bg-white dark:bg-gray-800 px-3 transition-all group-focus-within:border-[#FF4A75] group-focus-within:ring-1 group-focus-within:ring-[#FF4A75]">
+						<div className="flex flex-row items-center gap-2 w-full rounded-md h-10 border border-[#374151] dark:border-border bg-white dark:bg-surface-hover px-3 transition-all group-focus-within:border-[#FF4A75] group-focus-within:ring-1 group-focus-within:ring-[#FF4A75]">
 							<input
 								id="password"
 								type={isShowPassword ? "text" : "password"}
 								value={formData.password}
 								onChange={handleInputChange}
-								className="text-base w-full h-full focus:outline-none bg-transparent text-black dark:text-white"
+								className="text-base w-full h-full focus:outline-none bg-transparent text-black dark:text-text"
 								required
 							/>
 							<FontAwesomeIcon
 								onClick={() =>
 									setIsShowPassword(!isShowPassword)
 								}
-								className="w-fit h-full pl-2 border-l border-[#374151] cursor-pointer dark:text-gray-300 text-[#475569] hover:text-black dark:hover:text-white transition-colors"
+								className="w-fit h-full pl-2 border-l border-[#374151] dark:border-border cursor-pointer dark:text-text-muted text-[#475569] hover:text-black dark:hover:text-text transition-colors"
 								icon={isShowPassword ? faEye : faEyeSlash}
 							/>
 						</div>
@@ -216,7 +216,7 @@ const Auth = () => {
 							</p>
 						)}
 						{!isLogin && (
-							<div className="flex flex-col gap-2 mt-1 p-2.5 rounded-md border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900/40 text-[11px]">
+							<div className="flex flex-col gap-2 mt-1 p-2.5 rounded-md border border-gray-200 dark:border-border bg-white dark:bg-surface/60 text-[11px]">
 								<div className="flex items-center justify-between gap-4">
 									<span
 										className={`${pwdState.isEmpty ? "text-gray-400" : pwdState.strengthConfig.color} font-medium shrink-0`}
@@ -239,13 +239,13 @@ const Auth = () => {
 														? pwdState
 															.strengthConfig
 															.bg
-														: "bg-gray-200 dark:bg-gray-800"
+														: "bg-gray-200 dark:bg-neutral-800"
 													}`}
 											/>
 										))}
 									</div>
 								</div>
-								<div className="flex flex-wrap gap-x-3 gap-y-1 text-gray-400 border-t border-gray-100 dark:border-gray-800 pt-1.5">
+								<div className="flex flex-wrap gap-x-3 gap-y-1 text-gray-400 border-t border-gray-100 dark:border-border pt-1.5">
 									{pwdState.requirements.map((item) => (
 										<div
 											key={item.id}
@@ -271,19 +271,19 @@ const Auth = () => {
 						<div className="flex flex-col gap-1 group">
 							<label
 								htmlFor="confirmPassword"
-								className="text-sm font-semibold text-[#475569] dark:text-gray-300"
+								className="text-sm font-semibold text-[#475569] dark:text-text-muted"
 							>
 								Confirm Password
 							</label>
 							<div
-								className={`flex flex-row items-center w-full rounded-md h-10 border px-3 transition-all group-focus-within:ring-1 ${isPasswordMatched ? "border-[#374151] group-focus-within:border-[#FF4A75] group-focus-within:ring-[#FF4A75] bg-white dark:bg-gray-800" : "border-red-500 ring-red-500 bg-red-50 dark:bg-red-900/10"}`}
+								className={`flex flex-row items-center w-full rounded-md h-10 border px-3 transition-all group-focus-within:ring-1 ${isPasswordMatched ? "border-[#374151] dark:border-border group-focus-within:border-[#FF4A75] group-focus-within:ring-[#FF4A75] bg-white dark:bg-surface-hover" : "border-red-500 ring-red-500 bg-red-50 dark:bg-red-900/10"}`}
 							>
 								<input
 									id="confirmPassword"
 									type="password"
 									value={formData.confirmPassword}
 									onChange={handleInputChange}
-									className="text-base w-full h-full focus:outline-none bg-transparent text-black dark:text-white"
+									className="text-base w-full h-full focus:outline-none bg-transparent text-black dark:text-text"
 									required={!isLogin}
 								/>
 							</div>
@@ -296,7 +296,7 @@ const Auth = () => {
 					)}
 
 					{isLogin && (
-						<div className="text-xs self-end text-[#475569] dark:text-gray-400 cursor-pointer hover:underline hover:underline-offset-2">
+						<div className="text-xs self-end text-[#475569] dark:text-text-faint cursor-pointer hover:underline hover:underline-offset-2">
 							<p>Forgot your password?</p>
 						</div>
 					)}
@@ -304,7 +304,7 @@ const Auth = () => {
 					<button
 						type="submit"
 						disabled={isLoading}
-						className="flex items-center justify-center gap-2 w-full rounded-md h-11 text-base font-semibold text-white cursor-pointer bg-[#FF4A75] hover:bg-[#e13b63] disabled:bg-gray-400 dark:disabled:bg-gray-700 transition-colors shadow-md mt-1"
+						className="flex items-center justify-center gap-2 w-full rounded-md h-11 text-base font-semibold text-white cursor-pointer bg-[#FF4A75] hover:bg-[#e13b63] disabled:bg-gray-400 dark:disabled:bg-neutral-700 transition-colors shadow-md mt-1"
 					>
 						{isLoading ? (
 							<FontAwesomeIcon
@@ -318,7 +318,7 @@ const Auth = () => {
 						)}
 					</button>
 
-					<div className="text-xs text-center md:text-left text-[#475569] dark:text-gray-400 mt-1">
+					<div className="text-xs text-center md:text-left text-[#475569] dark:text-text-faint mt-1">
 						{isLogin ? (
 							<p>
 								Don't have an account?{" "}
@@ -344,15 +344,15 @@ const Auth = () => {
 				</form>
 
 				<div className="relative w-full max-w-sm py-4 flex items-center justify-center">
-					<div className="w-full h-px bg-[#CBD5E1] dark:bg-gray-700" />
-					<div className="absolute bg-[#F8FAFC] dark:bg-gray-900 text-xs font-medium text-[#475569] dark:text-gray-400 px-3">
+					<div className="w-full h-px bg-[#CBD5E1] dark:bg-border" />
+					<div className="absolute bg-[#F8FAFC] dark:bg-bg text-xs font-medium text-[#475569] dark:text-text-faint px-3">
 						or
 					</div>
 				</div>
 
 				<button
 					type="button"
-					className="flex flex-row justify-center items-center gap-3 w-full max-w-sm rounded-md h-11 text-sm font-medium text-gray-700 dark:text-gray-200 cursor-pointer border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors shadow-sm mb-4 md:mb-0"
+					className="flex flex-row justify-center items-center gap-3 w-full max-w-sm rounded-md h-11 text-sm font-medium text-gray-700 dark:text-text cursor-pointer border border-gray-300 dark:border-neutral-700 bg-white dark:bg-surface-hover hover:bg-gray-50 dark:hover:bg-neutral-800 transition-colors shadow-sm mb-4 md:mb-0"
 				>
 					<img src={googleLogo} className="w-4 h-4" alt="Google" />
 					<p>

@@ -6,12 +6,15 @@ import { supabase } from "../libs/supabaseClient";
 interface AuthState {
     user: User | null,
     loading: boolean,
-    initializeAuth: () => () => void
+    mockLogin: boolean,
+    initializeAuth: () => () => void,
+    toggleMockLogin: () => void,
 }
 
 export const useAuthStore = create<AuthState>((set) => ({
     user: null,
     loading: true,
+    mockLogin: false,
 
     initializeAuth: () => {
         supabase.auth.getSession().then(({ data: { session } }) => {
@@ -23,5 +26,7 @@ export const useAuthStore = create<AuthState>((set) => ({
         });
 
         return () => subscription.unsubscribe();
-    }
+    },
+
+    toggleMockLogin: () => set((state) => ({ mockLogin: !state.mockLogin }))
 }))
