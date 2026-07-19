@@ -1,207 +1,214 @@
 import { Post, type PostData } from "./Post"
 import { useState } from "react"
+import { useAuthStore } from "../../stores/useAuthStore"
+import { usePostsStore } from "../../stores/usePostsStore"
+import { getCurrentAuthor } from "../../helpers/post/getCurrentAuthor"
+import { faInbox } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faFire, faUsers, faStar, faImage, faPaperclip } from "@fortawesome/free-solid-svg-icons"
+import { AttachmentPicker } from "../post/AttachmentPicker"
+import {
+    prepareAttachmentsForSave,
+    revokeAttachmentUrls,
+    type EditableAttachment,
+} from "../../helpers/post/postAttachments"
 
 import avatarGame from "../../assets/logos/raft-logo.png";
-import raftImg from "../../assets/logos/raft-logo.png";
 
-import butterflyEmeraldImg from "../../assets/mock-data/butterfly-emarald.webp";
-import dust2Img from "../../assets/mock-data/dust2_back_plat_s2.jpg";
-import figuresImg from "../../assets/mock-data/figures.jpeg";
+interface CreatePostPayload {
+    title: string;
+    content: string;
+    attachments: EditableAttachment[];
+}
 
-// ─── Feed tabs definition ──────────────────────────────────────────────────────
-const TABS = [
-    { id: "foryou",    label: "For You",  icon: faStar    },
-    { id: "following", label: "Following", icon: faUsers   },
-    { id: "hot",       label: "Hot 🔥",   icon: faFire    },
-] as const;
-
-type TabId = typeof TABS[number]["id"];
-
-// ─── Mock data ─────────────────────────────────────────────────────────────────
-export const ALL_POSTS: PostData[] = [
-    {
-        id: 1,
-        author: "User123",
-        authorAvatar: avatarGame,
-        gameTag: "Raft",
-        timeAgo: "2 giờ trước",
-        title: "Setup base ngoài khơi cực chill sau 40 ngày sinh tồn",
-        content:
-            "Cuối cùng cũng build xong base 3 tầng, có cả khu trồng trọt và bẫy cá tự động. " +
-            "Ai đang chơi Raft chia sẻ layout của mọi người xem nào!",
-        images: [raftImg, dust2Img], // 2 images test
-        tags: ["Raft", "Basebuilding", "Survival"],
-        likes: 24,
-        comments: 8,
-        tab: "foryou",
-    },
-    {
-        id: 2,
-        author: "GhostRider",
-        authorAvatar: avatarGame,
-        gameTag: "RDR 2",
-        timeAgo: "5 giờ trước",
-        title: "Bản mod đồ hoạ 4K mới ra, chạy siêu mượt",
-        content:
-            "Vừa test bản mod textures mới cho RDR2, cải thiện chất lượng ánh sáng ban đêm " +
-            "đáng kể mà FPS không giảm nhiều. Để link ở comment.",
-        tags: ["RDR2", "Mods", "Graphics"],
-        likes: 56,
-        comments: 19,
-        tab: "foryou",
-    },
-    {
-        id: 3,
-        author: "TacticalGamer",
-        authorAvatar: avatarGame,
-        gameTag: "CS 2",
-        timeAgo: "1 ngày trước",
-        title: "Tips aim training cho người mới lên Premier",
-        content:
-            "Chia sẻ routine warm-up 15 phút mỗi ngày giúp mình cải thiện aim rõ rệt sau 2 tuần. " +
-            "Không cần app ngoài, chỉ cần deathmatch đúng cách.",
-        images: [figuresImg, butterflyEmeraldImg, dust2Img], // 3 images test
-        tags: ["CS2", "Tips", "Aim"],
-        likes: 132,
-        comments: 41,
-        tab: "foryou",
-    },
-    {
-        id: 4,
-        author: "NightOwl",
-        authorAvatar: avatarGame,
-        gameTag: "Raft",
-        timeAgo: "30 phút trước",
-        title: "Base raft của squad mình sau 2 tuần chơi cùng nhau",
-        content:
-            "Cả squad 4 người cùng grind mỗi tối, giờ có base khổng lồ với đầy đủ tiện nghi. " +
-            "Recommend mode coop cho mọi người!",
-        images: [raftImg, raftImg, raftImg, raftImg, raftImg], // 5 images test
-        tags: ["Raft", "Coop", "Squad"],
-        likes: 89,
-        comments: 27,
-        tab: "following",
-    },
-    {
-        id: 5,
-        author: "ProSniper",
-        authorAvatar: avatarGame,
-        gameTag: "CS 2",
-        timeAgo: "3 giờ trước",
-        title: "AWP no-scope highlight reel — 20 kills in one match",
-        content:
-            "Vừa có một trận siêu đỉnh với AWP, chia sẻ clip highlight cho mọi người xem. " +
-            "Tất cả đều là no-scope, không có cheat!",
-        images: [butterflyEmeraldImg],
-        tags: ["CS2", "Highlight", "AWP"],
-        likes: 340,
-        comments: 88,
-        tab: "hot",
-    },
-    {
-        id: 6,
-        author: "MapMaker",
-        authorAvatar: avatarGame,
-        gameTag: "CS 2",
-        timeAgo: "12 giờ trước",
-        title: "Custom map mới: Ancient 2.0 — cải tiến toàn bộ layout",
-        content:
-            "Mất 3 tháng để build map này, thêm nhiều angle mới, rotate ngắn hơn và " +
-            "smoke lineups cực đẹp. Workshop link trong comment.",
-        images: [dust2Img],
-        tags: ["CS2", "Custom", "Workshop"],
-        likes: 512,
-        comments: 143,
-        tab: "hot",
-    },
-];
-
-// ─── Create post box ───────────────────────────────────────────────────────────
-const CreatePostBox = ({ onPost }: { onPost: (content: string) => void }) => {
+const CreatePostBox = ({ onPost }: { onPost: (data: CreatePostPayload) => Promise<void> }) => {
+    const user = useAuthStore((state) => state.user);
+    const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
+    const [attachments, setAttachments] = useState<EditableAttachment[]>([]);
+    const [expanded, setExpanded] = useState(false);
+    const [isPosting, setIsPosting] = useState(false);
 
-    const handlePost = () => {
-        if (!content.trim()) return;
-        onPost(content);
-        setContent("");
+    const isActive = expanded || content.trim().length > 0 || attachments.length > 0 || title.trim().length > 0;
+    const canPost = content.trim().length > 0 && !isPosting;
+    const avatarUrl =
+        user?.user_metadata?.avatar_url ??
+        "https://api.dicebear.com/7.x/avataaars/svg?seed=Felix";
+
+    const handlePost = async () => {
+        if (!canPost) return;
+
+        setIsPosting(true);
+        try {
+            await onPost({ title: title.trim(), content: content.trim(), attachments });
+            revokeAttachmentUrls(attachments);
+            setTitle("");
+            setContent("");
+            setAttachments([]);
+            setExpanded(false);
+        } finally {
+            setIsPosting(false);
+        }
     };
 
     return (
-        <div className="
-            w-full flex flex-col gap-3 p-4
-            bg-surface/90 backdrop-blur-md
-            border border-border rounded-2xl
-            shadow-[0_2px_12px_rgba(0,0,0,0.06)]
-            dark:shadow-[0_2px_16px_rgba(0,0,0,0.30)]
-        ">
-            <div className="flex flex-row items-center gap-3">
-                <img src={avatarGame} alt="User" className="w-10 h-10 rounded-full object-cover ring-1 ring-border shrink-0" />
-                <input 
-                    type="text" 
-                    value={content}
-                    onChange={(e) => setContent(e.target.value)}
-                    onKeyDown={(e) => e.key === "Enter" && handlePost()}
-                    placeholder="What's on your mind?" 
-                    className="w-full h-10 px-4 bg-surface-hover border border-border rounded-full text-sm focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all text-text placeholder:text-text-faint"
-                />
-            </div>
-            <div className="flex flex-row items-center justify-between pl-[3.25rem] pr-1">
-                <div className="flex flex-row items-center gap-1">
-                    <button className="w-8 h-8 flex items-center justify-center rounded-full text-text-muted hover:bg-surface-hover hover:text-primary transition-colors">
-                        <FontAwesomeIcon icon={faImage} className="text-[15px]" />
-                    </button>
-                    <button className="w-8 h-8 flex items-center justify-center rounded-full text-text-muted hover:bg-surface-hover hover:text-primary transition-colors">
-                        <FontAwesomeIcon icon={faPaperclip} className="text-[15px]" />
-                    </button>
-                </div>
-                <button 
-                    onClick={handlePost}
-                    disabled={!content.trim()}
-                    className={`px-5 py-1.5 rounded-full text-sm font-semibold transition-all ${
-                        content.trim() 
-                        ? "bg-primary text-white hover:bg-primary-hover shadow-[0_2px_10px_rgba(124,77,255,0.35)] hover:-translate-y-0.5" 
-                        : "bg-surface-hover text-text-faint cursor-not-allowed"
+        <div
+            id="create-post"
+            className="
+                w-full p-3
+                bg-surface/90 backdrop-blur-md
+                border border-border rounded-2xl
+                shadow-[0_2px_12px_rgba(0,0,0,0.06)]
+                dark:shadow-[0_2px_16px_rgba(0,0,0,0.30)]
+                transition-all duration-200 ease-out
+            "
+        >
+            <div className="flex gap-2.5 items-start">
+                <img
+                    src={avatarUrl}
+                    alt="User"
+                    className={`w-9 h-9 rounded-full object-cover ring-1 ring-border shrink-0 transition-all duration-200 ease-out ${
+                        isActive ? "" : "self-center"
                     }`}
-                >
-                    Post
-                </button>
+                />
+                <div className="flex flex-col gap-1.5 w-full min-w-0">
+                    <div
+                        className={`grid transition-[grid-template-rows,opacity,margin] duration-200 ease-out ${
+                            isActive
+                                ? "grid-rows-[1fr] opacity-100"
+                                : "grid-rows-[0fr] opacity-0 -mb-1.5 pointer-events-none"
+                        }`}
+                        aria-hidden={!isActive}
+                    >
+                        <div className="overflow-hidden min-h-0">
+                            <input
+                                type="text"
+                                value={title}
+                                onChange={(e) => setTitle(e.target.value)}
+                                placeholder="Post title (optional)"
+                                tabIndex={isActive ? 0 : -1}
+                                className="w-full h-9 px-3 bg-surface-hover border border-border rounded-xl text-sm focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all text-text placeholder:text-text-faint"
+                            />
+                        </div>
+                    </div>
+                    <textarea
+                        value={content}
+                        onChange={(e) => setContent(e.target.value)}
+                        onFocus={() => setExpanded(true)}
+                        onKeyDown={(e) => {
+                            if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) handlePost();
+                        }}
+                        placeholder="What's on your mind?"
+                        rows={1}
+                        className={`w-full px-3 py-2 bg-surface-hover border border-border rounded-xl text-sm focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-[min-height,border-color,box-shadow] duration-200 ease-out text-text placeholder:text-text-faint resize-none leading-snug ${
+                            isActive ? "min-h-[4.75rem]" : "min-h-[2.25rem]"
+                        }`}
+                    />
+
+                    <AttachmentPicker
+                        attachments={attachments}
+                        onChange={setAttachments}
+                        showToolbar={isActive}
+                        compactToolbar
+                        className="gap-1.5"
+                        toolbarTrailing={
+                            <button
+                                type="button"
+                                onClick={handlePost}
+                                disabled={!canPost}
+                                className={`shrink-0 px-4 py-1.5 rounded-full text-sm font-semibold transition-all ${
+                                    canPost
+                                        ? "bg-primary text-white hover:bg-primary-hover shadow-[0_2px_10px_rgba(124,77,255,0.35)]"
+                                        : "bg-surface-hover text-text-faint cursor-not-allowed"
+                                }`}
+                            >
+                                {isPosting ? "Posting..." : "Post"}
+                            </button>
+                        }
+                    />
+                </div>
             </div>
         </div>
     );
 };
 
-
-
-// ─── FeedList ──────────────────────────────────────────────────────────────────
 export const FeedList = () => {
-    const [posts, setPosts] = useState<PostData[]>(ALL_POSTS);
+    const user = useAuthStore((state) => state.user);
+    const mockLogin = useAuthStore((state) => state.mockLogin);
+    const isLoggedIn = !!user || mockLogin;
 
-    const handleCreatePost = (content: string) => {
+    const posts = usePostsStore((state) => state.posts);
+    const addPost = usePostsStore((state) => state.addPost);
+    const updatePost = usePostsStore((state) => state.updatePost);
+    const deletePost = usePostsStore((state) => state.deletePost);
+
+    const [hiddenAuthors, setHiddenAuthors] = useState<string[]>([]);
+    const currentAuthor = getCurrentAuthor();
+
+    const handleCreatePost = async ({ title, content, attachments }: CreatePostPayload) => {
+        const { images, files } = await prepareAttachmentsForSave(attachments);
+
         const newPost: PostData = {
             id: Date.now(),
-            author: "You",
+            author: currentAuthor,
             authorAvatar: avatarGame,
             gameTag: "General",
             timeAgo: "Vừa xong",
-            title: "New update",
-            content: content,
+            title: title || content.slice(0, 80) + (content.length > 80 ? "..." : ""),
+            content,
+            images: images.length > 0 ? images : undefined,
+            files: files.length > 0 ? files : undefined,
             tags: [],
             likes: 0,
             comments: 0,
         };
-        setPosts([newPost, ...posts]);
+        addPost(newPost);
     };
+
+    const handleEditPost = (
+        id: string | number,
+        data: { title: string; content: string; images?: string[]; files?: PostData["files"] }
+    ) => {
+        updatePost(id, {
+            title: data.title || data.content.slice(0, 80) + (data.content.length > 80 ? "..." : ""),
+            content: data.content,
+            images: data.images,
+            files: data.files,
+        });
+    };
+
+    const handleUnfollowAuthor = (author: string) => {
+        setHiddenAuthors((prev) => [...prev, author]);
+    };
+
+    const filteredPosts = posts.filter((p) => !hiddenAuthors.includes(p.author));
 
     return (
         <div className="w-full flex flex-col gap-3">
 
-            {/* Create Post */}
-            <CreatePostBox onPost={handleCreatePost} />
+            {isLoggedIn && <CreatePostBox onPost={handleCreatePost} />}
 
-            {/* Posts */}
-            {posts.map((post) => <Post key={post.id} post={post} />)}
+            {filteredPosts.length > 0 ? (
+                filteredPosts.map((post) => (
+                    <Post
+                        key={post.id}
+                        post={post}
+                        isOwner={post.author === currentAuthor}
+                        onDelete={deletePost}
+                        onEdit={handleEditPost}
+                        onUnfollowAuthor={handleUnfollowAuthor}
+                    />
+                ))
+            ) : (
+                <div className="
+                    w-full flex flex-col items-center justify-center gap-2 p-10
+                    bg-surface/90 backdrop-blur-md border border-border rounded-2xl
+                    text-text-muted text-sm
+                ">
+                    <FontAwesomeIcon icon={faInbox} className="text-2xl text-text-faint mb-1" />
+                    <p className="font-semibold text-text">No posts here yet</p>
+                    <p className="text-text-faint text-center">Check back later or create a new post.</p>
+                </div>
+            )}
         </div>
     );
 }

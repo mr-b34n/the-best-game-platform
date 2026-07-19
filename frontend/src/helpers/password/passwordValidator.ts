@@ -7,8 +7,8 @@ export interface ValidationRule {
 
 export interface PasswordStrengthConfig {
     label: string;
-    color: string; // Tailwind class cho text
-    bg: string;    // Tailwind class cho background
+    color: string;
+    bg: string;
 }
 
 export interface PasswordValidationResult {
@@ -20,13 +20,9 @@ export interface PasswordValidationResult {
 }
 
 export const STRENGTH_LEVELS: Record<number, PasswordStrengthConfig> = {
-    // 1: Dùng màu đỏ đậm (Rose/Red) cho mức yếu nhất
     1: { label: "Weak", color: "text-red-600", bg: "bg-red-600" },
-    // 2: Dùng màu cam rực (Amber) để tách biệt hẳn với đỏ
     2: { label: "Fair", color: "text-amber-500", bg: "bg-amber-500" },
-    // 3: Dùng màu vàng chanh (Yellow) hoặc màu vàng nhạt
     3: { label: "Good", color: "text-yellow-400", bg: "bg-yellow-400" },
-    // 4: Dùng màu xanh lá (Emerald) - độ tươi cao hơn
     4: { label: "Strong", color: "text-emerald-500", bg: "bg-emerald-500" },
 };
 
@@ -48,9 +44,8 @@ export const validatePassword = async (password: string): Promise<PasswordValida
         isMet: rule.test(password),
     }));
 
-    const zxcvbnResult = zxcvbn(password); 
+    const zxcvbnResult = zxcvbn(password);
 
-    // Logic gộp 0 và 1 thành 1
     const normalizedScore = zxcvbnResult.score <= 1 ? 1 : zxcvbnResult.score;
 
     return {
