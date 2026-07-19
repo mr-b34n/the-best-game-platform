@@ -20,7 +20,6 @@ interface CreatePostPayload {
     attachments: EditableAttachment[];
 }
 
-// ─── Create post box ───────────────────────────────────────────────────────────
 const CreatePostBox = ({ onPost }: { onPost: (data: CreatePostPayload) => Promise<void> }) => {
     const user = useAuthStore((state) => state.user);
     const [title, setTitle] = useState("");
@@ -132,7 +131,6 @@ const CreatePostBox = ({ onPost }: { onPost: (data: CreatePostPayload) => Promis
     );
 };
 
-// ─── FeedList ──────────────────────────────────────────────────────────────────
 export const FeedList = () => {
     const user = useAuthStore((state) => state.user);
     const mockLogin = useAuthStore((state) => state.mockLogin);

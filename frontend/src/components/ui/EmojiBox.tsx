@@ -1,6 +1,5 @@
 import React, { useRef, useEffect } from 'react';
 
-// Đã loại bỏ 'label', tinh chỉnh lại mức delay mượt hơn cho animation xuất hiện
 const REACTIONS = [
     { id: 'like', char: '👍', delay: 'delay-[0ms]' },
     { id: 'love', char: '❤️', delay: 'delay-[40ms]' },
@@ -36,7 +35,6 @@ const EmojiBox: React.FC<ReactionPickerProps> = ({ isOpen, onClose, onSelect }) 
     return (
         <div
             ref={pickerRef}
-            // Sử dụng bg-surface và border-border để tự động chuyển Dark/Light
             className="absolute bottom-full left-0 z-50 p-1.5 mb-3 
                        bg-surface border border-border rounded-full 
                        shadow-[0_8px_30px_rgba(0,0,0,0.12)] dark:shadow-[0_8px_30px_rgba(0,0,0,0.5)]
@@ -49,8 +47,6 @@ const EmojiBox: React.FC<ReactionPickerProps> = ({ isOpen, onClose, onSelect }) 
                     key={react.id}
                     type="button"
                     onClick={() => onSelect(react.id, react.char)}
-                    // 1. Thêm padding (p-2) làm vùng đệm cho chuột. 
-                    // 2. Class 'group' bao quanh giúp điều khiển logic.
                     className={`relative flex items-center justify-center p-2 text-[28px] leading-none
             transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)]
             origin-bottom transform-gpu
@@ -58,10 +54,6 @@ const EmojiBox: React.FC<ReactionPickerProps> = ({ isOpen, onClose, onSelect }) 
             focus:outline-none
             ${react.delay}`}
                 >
-                    {/* 
-            Đặt một thẻ div bọc ngoài cùng với padding lớn hơn icon 
-            để mở rộng "hitbox" của chuột.
-        */}
                     <span className="block transform transition-transform duration-300 pointer-events-none">
                         {react.char}
                     </span>

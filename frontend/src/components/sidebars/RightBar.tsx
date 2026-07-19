@@ -7,7 +7,6 @@ import rdr2Logo    from "../../assets/logos/rdr2-logo.png";
 import cs2Logo     from "../../assets/logos/cs2-logo.webp";
 import avatarGame  from "../../assets/logos/raft-logo.png";
 
-// ─── Shared floating panel ─────────────────────────────────────────────────────
 const Panel = ({ children }: { children: React.ReactNode }) => (
     <div className="
         w-full flex flex-col overflow-hidden
@@ -19,7 +18,6 @@ const Panel = ({ children }: { children: React.ReactNode }) => (
     </div>
 );
 
-// ─── Panel title ───────────────────────────────────────────────────────────────
 const SectionTitle = ({ icon, label, extra }: { icon: typeof faArrowTrendUp; label: string; extra?: React.ReactNode }) => (
     <div className="flex items-center gap-2 px-4 pt-3.5 pb-2">
         <FontAwesomeIcon icon={icon} className="text-[13px] text-text-muted" />
@@ -28,7 +26,6 @@ const SectionTitle = ({ icon, label, extra }: { icon: typeof faArrowTrendUp; lab
     </div>
 );
 
-// ─── Squad online data ─────────────────────────────────────────────────────────
 const SQUAD_MEMBERS = [
     { name: "GhostRider",    game: "Red Dead 2",    logo: rdr2Logo, status: "online",  playtime: "2h 14m" },
     { name: "TacticalXeno",  game: "CS2 — Rank S",  logo: cs2Logo,  status: "online",  playtime: "45m"    },
@@ -36,7 +33,6 @@ const SQUAD_MEMBERS = [
     { name: "Maplestrike",   game: null,             logo: null,     status: "offline", playtime: null     },
 ];
 
-// ─── Trending data ─────────────────────────────────────────────────────────────
 const TRENDING_POSTS = [
     {
         id: 1,
@@ -67,22 +63,18 @@ const TRENDING_POSTS = [
     },
 ];
 
-// ─── Events data ───────────────────────────────────────────────────────────────
 const EVENTS = [
     { id: 1, label: "CS2 Major — Quarterfinals", date: "Jul 20", color: "bg-rose-500" },
     { id: 2, label: "IndieG Community Game Night", date: "Jul 22", color: "bg-primary" },
     { id: 3, label: "Raft Summer Fest Update", date: "Jul 25", color: "bg-emerald-500" },
 ];
 
-// ─── RightBar ─────────────────────────────────────────────────────────────────
 export const RightBar = () => {
     const navigate = useNavigate();
     const onlineCount = SQUAD_MEMBERS.filter((m) => m.status === "online").length;
 
     return (
         <div className="w-full flex flex-col gap-3">
-
-            {/* ── Squad Online ──────────────────────────────────────── */}
             <Panel>
                 <SectionTitle
                     icon={faGamepad}
@@ -102,7 +94,6 @@ export const RightBar = () => {
                                 key={m.name}
                                 className="flex items-center gap-3 px-2 py-1.5 rounded-xl hover:bg-surface-hover transition-colors cursor-pointer group"
                             >
-                                {/* Avatar + online dot */}
                                 <div className="relative shrink-0">
                                     <img
                                         src={avatarGame}
@@ -112,7 +103,6 @@ export const RightBar = () => {
                                     <span className={`absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full ring-2 ring-surface ${online ? "bg-emerald-500" : "bg-neutral-400"}`} />
                                 </div>
 
-                                {/* Info */}
                                 <div className="flex flex-col min-w-0 flex-1">
                                     <p className={`text-sm font-semibold truncate ${online ? "text-text" : "text-text-faint"}`}>
                                         {m.name}
@@ -127,7 +117,6 @@ export const RightBar = () => {
                                     )}
                                 </div>
 
-                                {/* Playtime pill */}
                                 {online && m.playtime && (
                                     <span className="text-[10px] text-text-faint shrink-0 group-hover:text-text-muted transition-colors">
                                         {m.playtime}
@@ -139,7 +128,6 @@ export const RightBar = () => {
                 </div>
             </Panel>
 
-            {/* ── Trending Discussions ──────────────────────────────── */}
             <Panel>
                 <SectionTitle icon={faArrowTrendUp} label="Trending" />
                 <div className="flex flex-col pb-2 px-2 gap-0.5">
@@ -149,15 +137,12 @@ export const RightBar = () => {
                             onClick={() => navigate({ to: "/post/$postId", params: { postId: post.postId.toString() } })}
                             className="flex items-start gap-3 px-2 py-2 rounded-xl hover:bg-surface-hover transition-colors cursor-pointer group"
                         >
-                            {/* Rank */}
                             <p className={`text-xs font-black w-4 text-center pt-0.5 shrink-0 ${i === 0 ? "text-rose-500" : i === 1 ? "text-amber-500" : "text-text-faint"}`}>
                                 {i + 1}
                             </p>
 
-                            {/* Game logo */}
                             <img src={post.gameLogo} alt={post.game} className="w-8 h-8 rounded-lg object-cover shrink-0 ring-1 ring-border" />
 
-                            {/* Info */}
                             <div className="flex flex-col gap-1 min-w-0 flex-1">
                                 <p className="text-sm font-medium text-text leading-tight line-clamp-2 group-hover:text-primary transition-colors">
                                     {post.title}
@@ -175,7 +160,6 @@ export const RightBar = () => {
                 </div>
             </Panel>
 
-            {/* ── Upcoming Events ──────────────────────────────────── */}
             <Panel>
                 <SectionTitle icon={faCalendarDay} label="Upcoming" />
                 <div className="flex flex-col pb-3 px-4 gap-2.5">
@@ -193,8 +177,6 @@ export const RightBar = () => {
                     ))}
                 </div>
             </Panel>
-
-            
         </div>
     )
 }

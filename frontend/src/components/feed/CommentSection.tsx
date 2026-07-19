@@ -4,10 +4,9 @@ import { faHeart as faHeartOutline } from "@fortawesome/free-regular-svg-icons";
 import { faHeart as faHeartSolid, faReply, faImage, faFaceSmile } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "@tanstack/react-router";
 
-import avatarUser from "../../assets/logos/raft-logo.png"; // mock avatar
+import avatarUser from "../../assets/logos/raft-logo.png";
 import { useAuthStore } from "../../stores/useAuthStore";
 
-// ─── Comment mock data types ───────────────────────────────────────────────────
 export interface CommentData {
     id: string | number;
     author: string;
@@ -21,7 +20,6 @@ interface CommentSectionProps {
     postId: string;
 }
 
-// ─── Individual Comment Component ──────────────────────────────────────────────
 const CommentItem = ({ comment }: { comment: CommentData }) => {
     const [liked, setLiked] = useState(false);
     const [likeCount, setLikeCount] = useState(comment.likes);
@@ -33,14 +31,12 @@ const CommentItem = ({ comment }: { comment: CommentData }) => {
 
     return (
         <div className="flex flex-row items-start gap-3 w-full animate-fade-in group">
-            {/* Avatar */}
             <img
                 src={comment.authorAvatar}
                 alt={comment.author}
                 className="w-10 h-10 rounded-full object-cover shrink-0"
             />
-            
-            {/* Content box */}
+
             <div className="flex flex-col flex-1 gap-1 pb-4 border-b border-border/50 group-last:border-0">
                 <div className="flex flex-col">
                     <div className="flex flex-row items-center gap-2">
@@ -52,7 +48,6 @@ const CommentItem = ({ comment }: { comment: CommentData }) => {
                     </p>
                 </div>
 
-                {/* Comment actions */}
                 <div className="flex flex-row items-center gap-6 mt-1 text-[13px] font-medium text-text-faint">
                     <button 
                         onClick={toggleLike} 
@@ -70,7 +65,6 @@ const CommentItem = ({ comment }: { comment: CommentData }) => {
     );
 };
 
-// ─── Comment Section Component ─────────────────────────────────────────────────
 export const CommentSection = ({ postId }: CommentSectionProps) => {
     const [commentText, setCommentText] = useState("");
     const user = useAuthStore((state) => state.user);
@@ -78,7 +72,6 @@ export const CommentSection = ({ postId }: CommentSectionProps) => {
     const isLoggedIn = !!user || mockLogin;
     const navigate = useNavigate();
 
-    // Mock comments state
     const [comments, setComments] = useState<CommentData[]>([
         {
             id: 1,
@@ -120,13 +113,10 @@ export const CommentSection = ({ postId }: CommentSectionProps) => {
 
     return (
         <div className="w-full flex flex-col pt-4 mt-2 border-t border-border">
-            
-            {/* Header */}
             <h3 className="font-bold text-lg text-text px-4 mb-4">
                 Comments <span className="text-text-muted font-normal text-base ml-1">{comments.length}</span>
             </h3>
 
-            {/* Comment Input Area */}
             <div className="flex flex-row gap-3 px-4 mb-6">
                 {isLoggedIn ? (
                     <>
@@ -176,7 +166,6 @@ export const CommentSection = ({ postId }: CommentSectionProps) => {
                 )}
             </div>
 
-            {/* List of comments */}
             <div className="flex flex-col gap-4 px-4 pb-4">
                 {comments.map((cmt) => (
                     <CommentItem key={cmt.id} comment={cmt} />

@@ -25,7 +25,6 @@ export const ReportModal = ({ postId, author, onClose }: ReportModalProps) => {
 
     const handleSubmit = () => {
         if (!selectedReason) return;
-        // TODO: gọi API report thật, dùng postId ở đây
         console.log("Reporting post", postId, "reason:", selectedReason, "details:", details);
         setIsSubmitted(true);
         setTimeout(() => {
@@ -35,16 +34,13 @@ export const ReportModal = ({ postId, author, onClose }: ReportModalProps) => {
 
     return createPortal(
         <div className="fixed inset-0 z-200 flex items-center justify-center animate-fade-in px-4">
-            {/* Backdrop */}
             <div
                 className="absolute inset-0 bg-black/60 backdrop-blur-sm"
                 onClick={onClose}
             />
 
-            {/* Modal Box */}
             <div className="relative w-full max-w-md bg-surface border border-border rounded-2xl shadow-2xl flex flex-col overflow-hidden animate-slide-up">
 
-                {/* Header */}
                 <div className="flex flex-row items-center justify-between px-5 py-4 border-b border-border bg-surface-hover/30">
                     <h3 className="font-bold text-lg text-text">Report Post</h3>
                     <button

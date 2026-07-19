@@ -34,7 +34,6 @@ import { EditPostModal } from "../ui/EditPostModal"
 import EmojiBox from "../ui/EmojiBox"
 import { formatFileSize } from "../../helpers/post/postAttachmentLimits"
 
-// Rotating tag colour palette
 const TAG_CLASSES = [
     "bg-tag-1/10 text-tag-1",
     "bg-tag-2/10 text-tag-2",
@@ -43,14 +42,12 @@ const TAG_CLASSES = [
     "bg-tag-5/10 text-tag-5",
 ];
 
-// Post category badge — chỉ hiển thị, không còn dùng để filter
 const BADGE_MAP = {
     foryou: { icon: faStar, label: "Recommended", classes: "text-tag-4 bg-tag-4/10 border border-tag-4/20" },
     following: { icon: faUsers, label: "Following", classes: "text-primary bg-primary-soft border border-primary/20" },
     hot: { icon: faFire, label: "Trending", classes: "text-accent-500 bg-accent-500/10 border border-accent-500/20" },
 };
 
-// User rank badge — icon nhỏ đặt góc avatar + label cạnh tên
 const RANK_MAP = {
     rookie: { icon: faSeedling, label: "Rookie", classes: "bg-neutral-400 text-white" },
     pro: { icon: faShieldHalved, label: "Pro", classes: "bg-success-500 text-white" },
@@ -95,7 +92,6 @@ interface PostProps {
     isDetailView?: boolean;
 }
 
-// ─── Image Gallery component ───────────────────────────────────────────────────
 const ImageGallery = ({ images, onImageClick }: { images: string[], onImageClick: (index: number) => void }) => {
     if (!images || images.length === 0) return null;
 
@@ -195,7 +191,6 @@ export const Post = ({ post, isOwner = false, onDelete, onEdit, onUnfollowAuthor
 
     const [isEmojiOpen, setIsEmojiOpen] = useState(false);
 
-    // Dùng useRef để lưu trữ ID của setTimeout tránh bị re-render mất dữ liệu
     const pressHoldTimeoutRef = useRef<number | null>(null);
     const isLongPressRef = useRef(false);
 
@@ -279,31 +274,26 @@ export const Post = ({ post, isOwner = false, onDelete, onEdit, onUnfollowAuthor
 
     const handleMouseDown = (e: React.MouseEvent) => {
         e.stopPropagation();
-        isLongPressRef.current = false; // Reset trạng thái mỗi lần nhấn mới
+        isLongPressRef.current = false;
 
-        // Thiết lập đợi 500ms (hoặc thời gian tùy bạn chọn) để kích hoạt long-press
         pressHoldTimeoutRef.current = setTimeout(() => {
             setIsEmojiOpen(true);
-            isLongPressRef.current = true; // Đánh dấu đây là một cú nhấn giữ dài
+            isLongPressRef.current = true;
         }, 700);
     };
 
-    // 2. Khi nhả chuột ra
     const handleMouseUp = (e: React.MouseEvent) => {
         e.stopPropagation();
 
-        // Xóa bộ đếm thời gian nếu người dùng nhả chuột sớm hơn 500ms
         if (pressHoldTimeoutRef.current) {
             clearTimeout(pressHoldTimeoutRef.current);
         }
 
-        // Nếu KHÔNG PHẢI nhấn giữ (nhấp chuột nhanh thông thường) -> Kích hoạt hành động Like
         if (!isLongPressRef.current) {
             toggleLike();
         }
     };
 
-    // Hủy hành động nếu người dùng di chuột ra khỏi nút khi đang nhấn giữ
     const handleMouseLeave = () => {
         if (pressHoldTimeoutRef.current) {
             clearTimeout(pressHoldTimeoutRef.current);
@@ -312,7 +302,6 @@ export const Post = ({ post, isOwner = false, onDelete, onEdit, onUnfollowAuthor
 
     const handleSelectEmoji = (reactionId: string, char: string) => {
         console.log(`Đã chọn cảm xúc: ${reactionId} (${char})`);
-        // Xử lý logic tăng count hoặc đổi icon hiển thị của bạn tại đây
         setIsEmojiOpen(false);
     };
 
@@ -333,9 +322,7 @@ export const Post = ({ post, isOwner = false, onDelete, onEdit, onUnfollowAuthor
             ${isDetailView ? "" : "cursor-pointer"}
         `}>
 
-            {/* ── Post header ─────────────────────────────────────── */}
             <div className="flex flex-row items-center gap-3 px-4 pt-4 pb-3">
-                {/* Avatar + rank badge góc dưới bên phải */}
                 <div className="relative shrink-0">
                     <img
                         src={post.authorAvatar}
@@ -424,7 +411,6 @@ export const Post = ({ post, isOwner = false, onDelete, onEdit, onUnfollowAuthor
                 </div>
             </div>
 
-            {/* ── Body: title + text ──────────────────────────────── */}
             <div className="px-4 pb-3 flex flex-col gap-2">
                 <p className="font-semibold text-base text-text leading-snug">
                     {post.title}
@@ -449,25 +435,21 @@ export const Post = ({ post, isOwner = false, onDelete, onEdit, onUnfollowAuthor
                 )}
             </div>
 
-            {/* ── Image Gallery ───────────────────────────────────── */}
             {post.images && post.images.length > 0 && (
                 <div className="px-4 pb-3">
                     <ImageGallery images={post.images} onImageClick={setLightboxIndex} />
                 </div>
             )}
 
-            {/* ── File attachments ────────────────────────────────── */}
             {post.files && post.files.length > 0 && (
                 <div className="px-4 pb-3">
                     <FileAttachments files={post.files} />
                 </div>
             )}
 
-            {/* ── Action bar ──────────────────────────────────────── */}
             <div className="flex flex-row items-center gap-0.5 px-3 py-2.5 border-t border-border">
 
                 <div className="relative inline-block">
-                    {/* Bảng Emoji gắn trực tiếp lên trên nút Like */}
                     <EmojiBox
                         isOpen={isEmojiOpen}
                         onClose={() => setIsEmojiOpen(false)}
@@ -550,7 +532,6 @@ export const Post = ({ post, isOwner = false, onDelete, onEdit, onUnfollowAuthor
                 </button>
             </div>
 
-            {/* ── Lightbox Portal ────────────────────────────────────── */}
             {lightboxIndex !== null && post.images && (
                 <Lightbox
                     images={post.images}
@@ -559,7 +540,6 @@ export const Post = ({ post, isOwner = false, onDelete, onEdit, onUnfollowAuthor
                 />
             )}
 
-            {/* ── Report Modal Portal ────────────────────────────────── */}
             {showReportModal && (
                 <ReportModal
                     postId={post.id}
@@ -568,7 +548,6 @@ export const Post = ({ post, isOwner = false, onDelete, onEdit, onUnfollowAuthor
                 />
             )}
 
-            {/* ── Edit Modal Portal ──────────────────────────────────── */}
             {showEditModal && (
                 <EditPostModal
                     initialTitle={post.title}

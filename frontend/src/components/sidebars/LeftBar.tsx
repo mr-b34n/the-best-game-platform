@@ -14,7 +14,6 @@ import cs2Logo from "../../assets/logos/cs2-logo.webp";
 import rdr2Logo from "../../assets/logos/rdr2-logo.png";
 import raftLogo from "../../assets/logos/raft-logo.png";
 
-// ─── Style tokens ─────────────────────────────────────────────────────────────
 const navItem = `
     w-full flex flex-row items-center gap-3 px-3 py-2.5
     rounded-xl text-sm font-medium text-text-muted
@@ -31,7 +30,6 @@ const sectionLabel = `
     text-[10px] font-bold uppercase tracking-widest text-text-faint
 `;
 
-// ─── Mock: currently playing ────────────────────────────────────────────────
 const CURRENT_GAME = {
     name: "Raft",
     logo: raftLogo,
@@ -73,7 +71,6 @@ export const LeftBar = () => {
             rounded-2xl
         ">
 
-            {/* ── Profile / guest card ──────────────────────────── */}
             {isLoggedIn ? (
                 <button
                     type="button"
@@ -120,7 +117,6 @@ export const LeftBar = () => {
                 </div>
             )}
 
-            {/* ── Game Activity widget (logged in only) ─────────── */}
             {isLoggedIn && (
                 <div className="px-3 pt-3">
                     <div className="
@@ -162,7 +158,6 @@ export const LeftBar = () => {
                 </div>
             )}
 
-            {/* ── Menu section ──────────────────────────────────── */}
             <p className={sectionLabel}>Menu</p>
             <div className="flex flex-col gap-1 px-2 pb-1">
                 <button
@@ -212,7 +207,6 @@ export const LeftBar = () => {
                 )}
             </div>
 
-            {/* ── Library section (logged in only) ──────────────── */}
             {isLoggedIn && (
                 <>
                     <p className={sectionLabel}>Library</p>
@@ -274,7 +268,6 @@ export const LeftBar = () => {
                 </>
             )}
 
-            {/* ── Footer (logged in only) ───────────────────────── */}
             {isLoggedIn && (
                 <div className="border-t border-border px-2 py-2">
                     <button type="button" className={navItem}>

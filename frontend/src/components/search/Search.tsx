@@ -22,7 +22,6 @@ export const Search = () => {
     return (
         <div className="relative w-full max-w-md">
 
-            {/* ── Input row ─────────────────────────────────────────── */}
             <div className={`
                 flex flex-row items-center gap-2.5 px-3.5 py-2.5
                 w-full
@@ -53,7 +52,6 @@ export const Search = () => {
                         text-sm text-text placeholder:text-text-faint"
                 />
 
-                {/* Keyboard hint */}
                 {!focused && !value && (
                     <kbd className="hidden sm:flex shrink-0 items-center justify-center
                         px-1.5 py-0.5 rounded-md
@@ -63,7 +61,6 @@ export const Search = () => {
                     </kbd>
                 )}
 
-                {/* Clear button */}
                 {value && (
                     <button
                         onClick={() => setValue("")}
@@ -77,7 +74,6 @@ export const Search = () => {
                 )}
             </div>
 
-            {/* ── Dropdown ──────────────────────────────────────────── */}
             {focused && (
                 <div
                     onMouseDown={(e) => e.preventDefault()}

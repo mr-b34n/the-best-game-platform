@@ -18,7 +18,6 @@ import { STRENGTH_LEVELS, validatePassword, type PasswordValidationResult } from
 
 const Auth = () => {
 	useTheme("Authorization", gameLogo);
-	// const toggleTheme = useThemeStore((state) => state.toggleTheme);
 
 	const [isLogin, setIsLogin] = useState(true);
 	const [isLoading, setIsLoading] = useState(false);
@@ -105,7 +104,6 @@ const Auth = () => {
 
 	return (
 		<div className="flex flex-col md:flex-row w-screen h-screen bg-white dark:bg-bg transition-colors">
-			{/* LEFT COLUMN: INTRO & GRID PATTERN */}
 			<div className="relative hidden md:flex flex-col items-center justify-center w-full h-full bg-[#E0F2FE] dark:bg-neutral-950 p-8 overflow-hidden">
 				<div
 					className="absolute inset-0 
@@ -133,7 +131,6 @@ const Auth = () => {
 				</div>
 			</div>
 
-			{/* RIGHT COLUMN: AUTH FORM */}
 			<div className="flex flex-col items-center justify-center w-full h-full bg-[#F8FAFC] dark:bg-bg p-6 overflow-y-auto">
 				<div className="w-full max-w-sm text-center md:text-left mb-2 mt-4 md:mt-0">
 					<h1 className="text-4xl md:text-5xl font-bold text-black dark:text-text transition-all">

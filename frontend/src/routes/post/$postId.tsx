@@ -4,7 +4,6 @@ import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { Post } from '../../components/feed/Post';
 import { CommentSection } from '../../components/feed/CommentSection';
 
-// Layout components
 import { Header } from '../../components/header/Header';
 import { LeftBar } from '../../components/sidebars/LeftBar';
 import { RightBar } from '../../components/sidebars/RightBar';
@@ -18,7 +17,6 @@ export const Route = createFileRoute('/post/$postId')({
 })
 
 function PostDetail() {
-    // Keep theme consistent
     useTheme("Home");
     
     const { postId } = Route.useParams();
@@ -53,7 +51,6 @@ function PostDetail() {
     return (
         <div className="flex flex-col relative w-full h-screen overflow-hidden bg-bg text-text">
 
-            {/* ── Decorative background layer ── */}
             <div className="absolute inset-0 pointer-events-none select-none">
                 <div className="absolute inset-0
                     bg-[radial-gradient(circle,#c7c2dc_1px,transparent_1px)]
@@ -71,25 +68,20 @@ function PostDetail() {
                 />
             </div>
 
-            {/* ── Header ── */}
             <Header />
 
-            {/* ── Main 3-column content ── */}
             <div className="relative flex-1 overflow-y-auto overflow-x-hidden w-full z-10">
                 <div className="w-full max-w-[87.5rem] mx-auto
                     flex flex-row items-start gap-4
                     px-4 py-3 pb-12">
 
-                    {/* Left sidebar */}
                     <aside className="hidden lg:block shrink-0 w-60 sticky top-3 max-h-[calc(100vh-5rem)] overflow-y-auto scrollbar-none">
                         <LeftBar />
                     </aside>
 
-                    {/* Center Post Detail */}
                     <main className="flex-1 min-w-0">
                         <div className="w-full max-w-2xl mx-auto flex flex-col gap-4 pb-12 animate-fade-in">
-                            
-                            {/* Back button & header */}
+
                             <div className="w-full flex flex-row items-center gap-3 mb-2 px-1">
                                 <button 
                                     onClick={() => navigate({ to: '/' })}
@@ -105,7 +97,6 @@ function PostDetail() {
                                 <span className="text-sm font-bold text-text-muted tracking-wide uppercase">Post</span>
                             </div>
 
-                            {/* Main post */}
                             <div className="w-full">
                                 <Post
                                     post={post}
@@ -116,12 +107,10 @@ function PostDetail() {
                                 />
                             </div>
 
-                            {/* Comment section */}
                             <CommentSection postId={postId} />
                         </div>
                     </main>
 
-                    {/* Right sidebar */}
                     <aside className="hidden xl:block shrink-0 w-72 sticky top-3 max-h-[calc(100vh-5rem)] overflow-y-auto scrollbar-none">
                         <RightBar />
                     </aside>

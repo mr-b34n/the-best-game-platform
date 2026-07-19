@@ -16,7 +16,6 @@ export const Lightbox = ({ images, initialIndex, onClose }: LightboxProps) => {
     const [isDragging, setIsDragging] = useState(false);
     const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
 
-    // Handle keyboard navigation
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
             if (e.key === "Escape") onClose();
@@ -27,7 +26,6 @@ export const Lightbox = ({ images, initialIndex, onClose }: LightboxProps) => {
         return () => window.removeEventListener("keydown", handleKeyDown);
     }, [currentIndex]);
 
-    // Prevent scrolling on body when lightbox is open
     useEffect(() => {
         document.body.style.overflow = "hidden";
         return () => {
@@ -84,13 +82,11 @@ export const Lightbox = ({ images, initialIndex, onClose }: LightboxProps) => {
             onMouseUp={handleMouseUp}
             onMouseLeave={handleMouseUp}
         >
-            {/* Backdrop */}
             <div 
                 className="absolute inset-0 bg-black/90 backdrop-blur-sm cursor-zoom-out"
                 onClick={onClose}
             />
 
-            {/* Close Button */}
             <button
                 onClick={onClose}
                 className="absolute top-4 right-4 w-10 h-10 flex items-center justify-center rounded-full bg-black/50 text-white hover:bg-black/80 transition-colors z-[101]"
@@ -98,7 +94,6 @@ export const Lightbox = ({ images, initialIndex, onClose }: LightboxProps) => {
                 <FontAwesomeIcon icon={faXmark} className="text-xl" />
             </button>
 
-            {/* Toolbar */}
             <div className="absolute top-4 left-4 flex flex-row gap-2 z-[101]">
                 <button onClick={(e) => { e.stopPropagation(); handleZoomIn(); }} className="w-10 h-10 flex items-center justify-center rounded-full bg-black/50 text-white hover:bg-black/80 transition-colors">
                     <FontAwesomeIcon icon={faMagnifyingGlassPlus} className="text-sm" />
@@ -111,7 +106,6 @@ export const Lightbox = ({ images, initialIndex, onClose }: LightboxProps) => {
                 </button>
             </div>
 
-            {/* Navigation Buttons */}
             {images.length > 1 && (
                 <>
                     <button
@@ -129,7 +123,6 @@ export const Lightbox = ({ images, initialIndex, onClose }: LightboxProps) => {
                 </>
             )}
 
-            {/* Image Container */}
             <div className="relative w-full h-full max-w-6xl max-h-screen p-4 md:p-8 flex items-center justify-center pointer-events-none z-[101] overflow-hidden">
                 <img
                     src={images[currentIndex]}
@@ -145,7 +138,6 @@ export const Lightbox = ({ images, initialIndex, onClose }: LightboxProps) => {
                 />
             </div>
             
-            {/* Image Counter */}
             {images.length > 1 && (
                 <div className="absolute bottom-4 left-1/2 -translate-x-1/2 px-4 py-1.5 rounded-full bg-black/50 text-white text-sm font-medium z-[101]">
                     {currentIndex + 1} / {images.length}
