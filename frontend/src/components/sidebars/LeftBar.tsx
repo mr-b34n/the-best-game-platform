@@ -171,7 +171,10 @@ export const LeftBar = () => {
 
                 <button
                     type="button"
-                    onClick={() => setActivePage("community")}
+                    onClick={() => {
+                        setActivePage("community");
+                        navigate({ to: "/community" });
+                    }}
                     className={activePage === "community" ? navItemActive : navItem}
                 >
                     <FontAwesomeIcon icon={faUsers} className="w-4 shrink-0" />
