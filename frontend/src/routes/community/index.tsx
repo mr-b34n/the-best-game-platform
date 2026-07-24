@@ -1,9 +1,9 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { CommunityList } from './CommunityList';
 import { Header } from '@/shared/components/header/Header';
 import { LeftBar } from '@/shared/components/sidebars/LeftBar';
 import { RightBar } from '@/shared/components/sidebars/RightBar';
 import { useTheme } from '@/shared/hooks/useTheme';
+import { CommunityList } from '@/features/community';
 
 const Community = () => {
 	useTheme("Community");
