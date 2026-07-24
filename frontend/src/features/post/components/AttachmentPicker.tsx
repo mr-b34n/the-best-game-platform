@@ -1,20 +1,8 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFile, faImage, faPaperclip, faXmark } from "@fortawesome/free-solid-svg-icons";
-import {
-    createAttachmentFromFile,
-    revokeAttachmentUrl,
-    type EditableAttachment,
-} from "../../helpers/post/postAttachments";
-import {
-    FILE_ACCEPT,
-    formatFileSize,
-    IMAGE_ACCEPT,
-    MAX_ATTACHMENT_SIZE,
-    MAX_FILES,
-    MAX_IMAGES,
-    validateAttachment,
-} from "../../helpers/post/postAttachmentLimits";
+import { createAttachmentFromFile, revokeAttachmentUrl, type EditableAttachment } from "../helpers/postAttachments";
+import { FILE_ACCEPT, formatFileSize, IMAGE_ACCEPT, MAX_ATTACHMENT_SIZE, MAX_FILES, MAX_IMAGES, validateAttachment } from "../helpers/postAttachmentLimits";
 
 interface AttachmentPickerProps {
     attachments: EditableAttachment[];

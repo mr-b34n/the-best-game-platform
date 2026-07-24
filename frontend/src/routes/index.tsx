@@ -1,9 +1,9 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { FeedList } from '../components/feed/FeedList';
 import { Header } from '@/shared/components/header/Header';
 import { LeftBar } from '@/shared/components/sidebars/LeftBar';
 import { RightBar } from '@/shared/components/sidebars/RightBar';
 import { useTheme } from '@/shared/hooks/useTheme';
+import { FeedList } from '@/features/feed';
 
 const Home = () => {
 	useTheme("Home");

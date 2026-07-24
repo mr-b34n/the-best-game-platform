@@ -28,11 +28,11 @@ import {
 import { faTwitter, faFacebook } from "@fortawesome/free-brands-svg-icons"
 import { useRef, useState } from "react"
 import { useNavigate } from "@tanstack/react-router"
-import { Lightbox } from "../ui/Lightbox"
-import { ReportModal } from "../ui/ReportModal"
-import { EditPostModal } from "../ui/EditPostModal"
-import EmojiBox from "../ui/EmojiBox"
-import { formatFileSize } from "../../helpers/post/postAttachmentLimits"
+import { formatFileSize } from "../helpers/postAttachmentLimits"
+import EmojiBox from "@/shared/components/ui/EmojiBox"
+import { Lightbox } from "@/shared/components/ui/Lightbox"
+import { ReportModal } from "@/features/report"
+import { EditPostModal } from ".."
 
 const TAG_CLASSES = [
     "bg-tag-1/10 text-tag-1",

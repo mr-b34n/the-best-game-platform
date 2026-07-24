@@ -10,7 +10,7 @@ import {
     faMoon,
     faSignOutAlt,
 } from "@fortawesome/free-solid-svg-icons";
-import { useAuthStore } from '../../../stores/useAuthStore';
+import { useAuthStore } from '@/features/auth';
 
 const floatCard = `
     bg-surface/90 backdrop-blur-md

@@ -11,25 +11,16 @@ import {
     faInbox,
 } from '@fortawesome/free-solid-svg-icons';
 
-import { Post, type PostData } from '../../components/feed/Post';
-import { AttachmentPicker } from '../../components/post/AttachmentPicker';
-import {
-    prepareAttachmentsForSave,
-    revokeAttachmentUrls,
-    type EditableAttachment,
-} from '../../helpers/post/postAttachments';
-
-import { usePostsStore } from '../../stores/usePostsStore';
-import { useCommunitiesStore } from '../../stores/useCommunitiesStore';
-import { useAuthStore } from '../../stores/useAuthStore';
-import { getCurrentAuthor } from '../../helpers/post/getCurrentAuthor';
-
 import avatarGame from '../../assets/logos/raft-logo.png';
 import { Header } from '@/shared/components/header/Header';
 import { LeftBar } from '@/shared/components/sidebars/LeftBar';
 import { RightBar } from '@/shared/components/sidebars/RightBar';
 import { useTheme } from '@/shared/hooks/useTheme';
-
+import { AttachmentPicker, getCurrentAuthor, prepareAttachmentsForSave, revokeAttachmentUrls, usePostsStore, type EditableAttachment } from '@/features/post';
+import { useAuthStore } from '@/features/auth';
+import { useCommunitiesStore } from '@/features/community';
+import type { PostData } from '@/features/post/components/Post';
+import { Post } from '@/features/post/components/Post'
 export const Route = createFileRoute('/community/$communityId')({
     component: CommunityDetail,
 })
@@ -114,17 +105,15 @@ const CreateCommunityPostBox = ({
                 <img
                     src={avatarUrl}
                     alt="User"
-                    className={`w-9 h-9 rounded-full object-cover ring-1 ring-border shrink-0 transition-all duration-200 ease-out ${
-                        isActive ? "" : "self-center"
-                    }`}
+                    className={`w-9 h-9 rounded-full object-cover ring-1 ring-border shrink-0 transition-all duration-200 ease-out ${isActive ? "" : "self-center"
+                        }`}
                 />
                 <div className="flex flex-col gap-1.5 w-full min-w-0">
                     <div
-                        className={`grid transition-[grid-template-rows,opacity,margin] duration-200 ease-out ${
-                            isActive
-                                ? "grid-rows-[1fr] opacity-100"
-                                : "grid-rows-[0fr] opacity-0 -mb-1.5 pointer-events-none"
-                        }`}
+                        className={`grid transition-[grid-template-rows,opacity,margin] duration-200 ease-out ${isActive
+                            ? "grid-rows-[1fr] opacity-100"
+                            : "grid-rows-[0fr] opacity-0 -mb-1.5 pointer-events-none"
+                            }`}
                         aria-hidden={!isActive}
                     >
                         <div className="overflow-hidden min-h-0">
@@ -147,9 +136,8 @@ const CreateCommunityPostBox = ({
                         }}
                         placeholder={`Share something with ${communityName}...`}
                         rows={1}
-                        className={`w-full px-3 py-2 bg-surface-hover border border-border rounded-xl text-sm focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-[min-height,border-color,box-shadow] duration-200 ease-out text-text placeholder:text-text-faint resize-none leading-snug ${
-                            isActive ? "min-h-[4.75rem]" : "min-h-[2.25rem]"
-                        }`}
+                        className={`w-full px-3 py-2 bg-surface-hover border border-border rounded-xl text-sm focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-[min-height,border-color,box-shadow] duration-200 ease-out text-text placeholder:text-text-faint resize-none leading-snug ${isActive ? "min-h-[4.75rem]" : "min-h-[2.25rem]"
+                            }`}
                     />
 
                     <AttachmentPicker
@@ -163,11 +151,10 @@ const CreateCommunityPostBox = ({
                                 type="button"
                                 onClick={handlePost}
                                 disabled={!canPost}
-                                className={`shrink-0 px-4 py-1.5 rounded-full text-sm font-semibold transition-all ${
-                                    canPost
-                                        ? "bg-primary text-white hover:bg-primary-hover shadow-[0_2px_10px_rgba(124,77,255,0.35)]"
-                                        : "bg-surface-hover text-text-faint cursor-not-allowed"
-                                }`}
+                                className={`shrink-0 px-4 py-1.5 rounded-full text-sm font-semibold transition-all ${canPost
+                                    ? "bg-primary text-white hover:bg-primary-hover shadow-[0_2px_10px_rgba(124,77,255,0.35)]"
+                                    : "bg-surface-hover text-text-faint cursor-not-allowed"
+                                    }`}
                             >
                                 {isPosting ? "Posting..." : "Post"}
                             </button>
@@ -306,70 +293,93 @@ function CommunityDetail() {
                                     dark:shadow-[0_2px_16px_rgba(0,0,0,0.30)]
                                 "
                             >
-                                <div className={`relative h-28 bg-gradient-to-br ${gradient}`}>
-                                    {community.featured && (
-                                        <span className="absolute top-3 right-3 flex flex-row items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-accent-500 text-white">
-                                            <FontAwesomeIcon icon={faFire} className="text-[9px]" />
-                                            Featured
-                                        </span>
-                                    )}
-                                </div>
+                                <div
+                                    className="
+                                        w-full flex flex-col overflow-hidden
+                                        bg-surface/90 backdrop-blur-md
+                                        border border-border rounded-2xl
+                                        shadow-[0_2px_12px_rgba(0,0,0,0.06)]
+                                        dark:shadow-[0_2px_16px_rgba(0,0,0,0.30)]
+                                    "
+                                >
+                                    {/* Phần Banner */}
+                                    <div className={`relative h-34 bg-gradient-to-br ${gradient}`}>
+                                        {/* Đã BỎ z-50 khỏi ảnh backdrop */}
+                                        {community.backdrop && (
+                                            <img
+                                                src={community.backdrop}
+                                                alt={`${community.name} backdrop`}
+                                                className="absolute inset-0 w-full h-full object-cover"
+                                            />
+                                        )}
 
-                                <div className="flex flex-col px-5 pb-5 -mt-9">
-                                    <div className="flex flex-row items-end justify-between">
-                                        <img
-                                            src={community.logo}
-                                            alt={community.name}
-                                            className="w-20 h-20 rounded-2xl object-cover ring-4 ring-surface shadow-sm"
-                                        />
-                                        <button
-                                            onClick={() => toggleJoin(community.id)}
-                                            className={`mb-1 flex flex-row items-center gap-1.5 px-4 py-2 rounded-full text-sm font-bold transition-colors duration-150 ${community.joined
-                                                ? "bg-surface-hover text-text-muted hover:bg-accent-500/10 hover:text-accent-500"
-                                                : "bg-primary text-white hover:bg-primary-hover shadow-[0_2px_10px_rgba(0,170,255,0.3)]"
-                                                }`}
-                                        >
-                                            <FontAwesomeIcon icon={community.joined ? faCheck : faPlus} className="text-xs" />
-                                            {community.joined ? "Joined" : "Join"}
-                                        </button>
+                                        {/* Thêm z-10 để nút Featured luôn nổi trên backdrop */}
+                                        {community.featured && (
+                                            <span className="absolute z-10 top-3 right-3 flex flex-row items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-accent-500 text-white shadow-sm">
+                                                <FontAwesomeIcon icon={faFire} className="text-[9px]" />
+                                                Featured
+                                            </span>
+                                        )}
                                     </div>
 
-                                    <div className="flex flex-col mt-3 gap-0.5">
-                                        <p className="font-bold text-xl text-text">
-                                            {community.name}
-                                        </p>
-                                        <p className="text-xs font-semibold uppercase tracking-wide text-text-faint">
-                                            {community.category}
-                                        </p>
-                                    </div>
-
-                                    <p className="text-sm text-text-muted mt-2 leading-snug">
-                                        {community.description}
-                                    </p>
-
-                                    <div className="flex flex-row items-center gap-4 mt-3 text-[13px] text-text-faint">
-                                        <span className="flex flex-row items-center gap-1.5">
-                                            <FontAwesomeIcon icon={faUsers} className="text-xs" />
-                                            {community.members.toLocaleString()} members
-                                        </span>
-                                        <span className="flex flex-row items-center gap-1.5 text-success-500 font-medium">
-                                            <FontAwesomeIcon icon={faCircle} className="text-[6px]" />
-                                            {community.onlineNow} online
-                                        </span>
-                                    </div>
-
-                                    {community.tags.length > 0 && (
-                                        <div className="flex flex-row gap-1.5 flex-wrap mt-3">
-                                            {community.tags.map((tag, idx) => (
-                                                <span
-                                                    key={tag}
-                                                    className={`px-2 py-0.5 rounded-full text-[11px] font-medium ${TAG_CLASSES[idx % TAG_CLASSES.length]}`}
-                                                >
-                                                    #{tag}
-                                                </span>
-                                            ))}
+                                    {/* Phần Nội dung */}
+                                    <div className="flex flex-col px-5 pb-5 -mt-9">
+                                        <div className="flex flex-row items-end justify-between">
+                                            {/* Thêm relative z-10 để Avatar luôn nổi lên trên ranh giới backdrop */}
+                                            <img
+                                                src={community.logo}
+                                                alt={community.name}
+                                                className="relative z-10 w-20 h-20 rounded-2xl object-cover ring-4 ring-surface bg-surface shadow-sm"
+                                            />
+                                            <button
+                                                onClick={() => toggleJoin(community.id)}
+                                                className={`mb-1 flex flex-row items-center gap-1.5 px-4 py-2 rounded-full text-sm font-bold transition-colors duration-150 ${community.joined
+                                                    ? "bg-surface-hover text-text-muted hover:bg-accent-500/10 hover:text-accent-500"
+                                                    : "bg-primary text-white hover:bg-primary-hover shadow-[0_2px_10px_rgba(0,170,255,0.3)]"
+                                                    }`}
+                                            >
+                                                <FontAwesomeIcon icon={community.joined ? faCheck : faPlus} className="text-xs" />
+                                                {community.joined ? "Joined" : "Join"}
+                                            </button>
                                         </div>
-                                    )}
+
+                                        <div className="flex flex-col mt-3 gap-0.5">
+                                            <p className="font-bold text-xl text-text">
+                                                {community.name}
+                                            </p>
+                                            <p className="text-xs font-semibold uppercase tracking-wide text-text-faint">
+                                                {community.category}
+                                            </p>
+                                        </div>
+
+                                        <p className="text-sm text-text-muted mt-2 leading-snug">
+                                            {community.description}
+                                        </p>
+
+                                        <div className="flex flex-row items-center gap-4 mt-3 text-[13px] text-text-faint">
+                                            <span className="flex flex-row items-center gap-1.5">
+                                                <FontAwesomeIcon icon={faUsers} className="text-xs" />
+                                                {community.members.toLocaleString()} members
+                                            </span>
+                                            <span className="flex flex-row items-center gap-1.5 text-success-500 font-medium">
+                                                <FontAwesomeIcon icon={faCircle} className="text-[6px]" />
+                                                {community.onlineNow} online
+                                            </span>
+                                        </div>
+
+                                        {community.tags.length > 0 && (
+                                            <div className="flex flex-row gap-1.5 flex-wrap mt-3">
+                                                {community.tags.map((tag, idx) => (
+                                                    <span
+                                                        key={tag}
+                                                        className={`px-2 py-0.5 rounded-full text-[11px] font-medium ${TAG_CLASSES[idx % TAG_CLASSES.length]}`}
+                                                    >
+                                                        #{tag}
+                                                    </span>
+                                                ))}
+                                            </div>
+                                        )}
+                                    </div>
                                 </div>
                             </div>
 

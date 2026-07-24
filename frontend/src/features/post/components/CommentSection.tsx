@@ -4,8 +4,8 @@ import { faHeart as faHeartOutline } from "@fortawesome/free-regular-svg-icons";
 import { faHeart as faHeartSolid, faReply, faImage, faFaceSmile } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "@tanstack/react-router";
 
-import avatarUser from "../../assets/logos/raft-logo.png";
-import { useAuthStore } from "../../stores/useAuthStore";
+import avatarUser from "../../../assets/logos/raft-logo.png";
+import { useAuthStore } from "@/features/auth";
 
 export interface CommentData {
     id: string | number;

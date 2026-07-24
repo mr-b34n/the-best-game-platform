@@ -2,14 +2,9 @@ import { useState } from "react";
 import { createPortal } from "react-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
-import { AttachmentPicker } from "../post/AttachmentPicker";
-import type { PostData, PostFileAttachment } from "../feed/Post";
-import {
-    postToEditableAttachments,
-    prepareAttachmentsForSave,
-    revokeAttachmentUrls,
-    type EditableAttachment,
-} from "../../helpers/post/postAttachments";
+import type { PostData, PostFileAttachment } from "./Post";
+import { postToEditableAttachments, prepareAttachmentsForSave, revokeAttachmentUrls, type EditableAttachment } from "../helpers/postAttachments";
+import { AttachmentPicker } from "./AttachmentPicker";
 
 interface EditPostModalProps {
     initialTitle: string;

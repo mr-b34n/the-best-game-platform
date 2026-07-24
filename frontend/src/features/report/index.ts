@@ -1,1 +1,1 @@
-export { default as ReportModal } from "./components/ReportModal"
+export { ReportModal } from "./components/ReportModal"

@@ -1,7 +1,7 @@
+import { supabase } from "@/shared/lib/supabaseClient";
 import type { User } from "@supabase/supabase-js";
 import { type Session, type AuthChangeEvent } from "@supabase/supabase-js";
 import { create } from "zustand";
-import { supabase } from "../libs/supabaseClient";
 
 interface AuthState {
     user: User | null,

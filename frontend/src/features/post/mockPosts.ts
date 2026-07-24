@@ -1,10 +1,11 @@
-import type { PostData } from "../components/feed/Post";
 
-import avatarGame from "../assets/logos/raft-logo.png";
-import raftImg from "../assets/logos/raft-logo.png";
-import butterflyEmeraldImg from "../assets/mock-data/butterfly-emarald.webp";
-import dust2Img from "../assets/mock-data/dust2_back_plat_s2.jpg";
-import figuresImg from "../assets/mock-data/figures.jpeg";
+
+import avatarGame from "../../assets/logos/raft-logo.png";
+import raftImg from "../../assets/logos/raft-logo.png";
+import butterflyEmeraldImg from "../../assets/mock-data/butterfly-emarald.webp";
+import dust2Img from "../../assets/mock-data/dust2_back_plat_s2.jpg";
+import figuresImg from "../../assets/mock-data/figures.jpeg";
+import type { PostData } from "./components/Post";
 
 export const ALL_POSTS: PostData[] = [
     {

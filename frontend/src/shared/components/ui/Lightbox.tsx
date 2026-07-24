@@ -76,7 +76,7 @@ export const Lightbox = ({ images, initialIndex, onClose }: LightboxProps) => {
 
     return createPortal(
         <div 
-            className="fixed inset-0 z-[100] flex items-center justify-center animate-fade-in select-none"
+            className="fixed inset-0 z-100 flex items-center justify-center animate-fade-in select-none"
             onWheel={handleWheel}
             onMouseMove={handleMouseMove}
             onMouseUp={handleMouseUp}

@@ -1,6 +1,6 @@
 import { create } from "zustand";
-import type { PostData } from "../components/feed/Post";
-import { ALL_POSTS } from "../data/mockPosts";
+import type { PostData } from "../components/Post";
+import { ALL_POSTS } from "../mockPosts";
 
 interface PostsState {
     posts: PostData[];

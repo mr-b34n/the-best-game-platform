@@ -1,4 +1,5 @@
-import { useAuthStore } from "../../stores/useAuthStore";
+import { useAuthStore } from "@/features/auth";
+
 
 export const getCurrentAuthor = (): string => {
     const { user } = useAuthStore.getState();

@@ -1,2 +1,10 @@
 export { useAuthStore } from "./store/useAuthStore"
-export { default as passwordValidator } from "./helpers/passwordValidator"
+export {
+	validatePassword,
+	STRENGTH_LEVELS,
+} from "./helpers/passwordValidator"
+export type {
+	ValidationRule,
+	PasswordStrengthConfig,
+	PasswordValidationResult,
+} from "./helpers/passwordValidator"

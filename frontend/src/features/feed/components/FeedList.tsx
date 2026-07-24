@@ -1,18 +1,14 @@
-import { Post, type PostData } from "./Post"
+
 import { useState } from "react"
-import { useAuthStore } from "../../stores/useAuthStore"
-import { usePostsStore } from "../../stores/usePostsStore"
-import { getCurrentAuthor } from "../../helpers/post/getCurrentAuthor"
 import { faInbox } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { AttachmentPicker } from "../post/AttachmentPicker"
-import {
-    prepareAttachmentsForSave,
-    revokeAttachmentUrls,
-    type EditableAttachment,
-} from "../../helpers/post/postAttachments"
 
-import avatarGame from "../../assets/logos/raft-logo.png";
+import avatarGame from "../../../assets/logos/raft-logo.png";
+import { prepareAttachmentsForSave, revokeAttachmentUrls, type EditableAttachment } from "@/features/post/helpers/postAttachments";
+import { useAuthStore } from "@/features/auth";
+import { AttachmentPicker } from "@/features/post/components/AttachmentPicker";
+import { getCurrentAuthor, Post, usePostsStore } from "@/features/post";
+import type { PostData } from "@/features/post/components/Post";
 
 interface CreatePostPayload {
     title: string;

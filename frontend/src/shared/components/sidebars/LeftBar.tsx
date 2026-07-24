@@ -7,12 +7,12 @@ import { faHubspot } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { useState } from "react"
 import { useNavigate } from "@tanstack/react-router"
-import { useAuthStore } from "../../stores/useAuthStore"
-import { getCurrentAuthor } from "../../helpers/post/getCurrentAuthor"
 
-import cs2Logo from "../../assets/logos/cs2-logo.webp";
-import rdr2Logo from "../../assets/logos/rdr2-logo.png";
-import raftLogo from "../../assets/logos/raft-logo.png";
+import cs2Logo from "../../../assets/logos/cs2-logo.webp";
+import rdr2Logo from "../../../assets/logos/rdr2-logo.png";
+import raftLogo from "../../../assets/logos/raft-logo.png";
+import { useAuthStore } from "@/features/auth";
+import { getCurrentAuthor } from "@/features/post";
 
 const navItem = `
     w-full flex flex-row items-center gap-3 px-3 py-2.5

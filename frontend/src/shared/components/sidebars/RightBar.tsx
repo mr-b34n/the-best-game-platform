@@ -2,10 +2,10 @@ import { faArrowTrendUp, faGamepad, faCalendarDay, faUsers, faBolt } from "@fort
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { useNavigate } from "@tanstack/react-router"
 
-import raftLogo    from "../../assets/logos/raft-logo.png";
-import rdr2Logo    from "../../assets/logos/rdr2-logo.png";
-import cs2Logo     from "../../assets/logos/cs2-logo.webp";
-import avatarGame  from "../../assets/logos/raft-logo.png";
+import raftLogo    from "../../../assets/logos/raft-logo.png";
+import rdr2Logo    from "../../../assets/logos/rdr2-logo.png";
+import cs2Logo     from "../../../assets/logos/cs2-logo.webp";
+import avatarGame  from "../../../assets/logos/raft-logo.png";
 
 const Panel = ({ children }: { children: React.ReactNode }) => (
     <div className="

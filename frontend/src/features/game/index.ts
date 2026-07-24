@@ -1,1 +1,1 @@
-export { default as GameDetail } from "./components/GameDetail"
+export { GameDetail } from "./components/GameDetail"

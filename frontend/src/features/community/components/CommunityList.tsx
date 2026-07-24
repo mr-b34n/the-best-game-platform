@@ -11,8 +11,8 @@ import {
     faPlus,
 } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "@tanstack/react-router";
+import { useCommunitiesStore, type CommunityData } from "../store/useCommunitiesStore";
 
-import { useCommunitiesStore, type CommunityData } from "../../stores/useCommunitiesStore";
 
 const TAG_CLASSES = [
     "bg-tag-1/10 text-tag-1",
@@ -55,28 +55,48 @@ const CommunityCard = ({ community, index }: { community: CommunityData; index: 
                 cursor-pointer
             "
         >
-            <div className={`relative h-16 bg-gradient-to-br ${BANNER_GRADIENTS[index % BANNER_GRADIENTS.length]}`}>
+            {/* Phần Banner Backdrop */}
+            <div className={`relative h-36 overflow-hidden bg-gradient-to-br ${BANNER_GRADIENTS[index % BANNER_GRADIENTS.length]}`}>
+                {community.backdrop && (
+                    <img
+                        src={community.backdrop}
+                        alt={`${community.name} backdrop`}
+                        className="absolute inset-0 w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                    />
+                )}
+
                 {community.featured && (
-                    <span className="absolute top-2 right-2 flex flex-row items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-accent-500 text-white">
-                        <FontAwesomeIcon icon={faFire} className="text-[9px]" />
+                    <span className="absolute z-20 top-3 right-3 flex flex-row items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider bg-accent-500 text-white shadow-lg">
+                        <FontAwesomeIcon icon={faFire} className="text-[10px]" />
                         Featured
                     </span>
                 )}
             </div>
 
-            <div className="flex flex-col px-4 pb-4 -mt-7">
-                <div className="flex flex-row items-end justify-between">
-                    <img
-                        src={community.logo}
-                        alt={community.name}
-                        className="w-14 h-14 rounded-2xl object-cover ring-4 ring-surface shadow-sm"
-                    />
+            {/* Phần Nội dung */}
+            <div className="flex flex-col px-5 pb-5">
+                {/* Hàng chứa Logo và nút Join */}
+                <div className="flex flex-row items-end justify-between mb-3">
+                    {/* 
+                Bọc Avatar trong một div riêng biệt có lề âm (-mt-8) 
+                để kéo nó lên chính giữa ranh giới banner và nền.
+                Sử dụng border-[3px] và rounded-full để viền mượt mà.
+            */}
+                    <div className="relative z-10 -mt-8">
+                        <img
+                            src={community.logo}
+                            alt={community.name}
+                            className="w-16 h-16 rounded-2xl object-cover border-4 border-surface bg-surface shadow-sm"
+                        />
+                    </div>
+
+                    {/* Nút Join giờ đây nằm hoàn toàn ở div bên dưới, không bị kéo lên theo lề âm */}
                     <button
                         onClick={(e) => {
                             e.stopPropagation();
                             toggleJoin(community.id);
                         }}
-                        className={`mb-1 flex flex-row items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold transition-colors duration-150 ${community.joined
+                        className={`flex flex-row items-center gap-1.5 px-4 py-2 rounded-full text-xs font-bold transition-colors duration-150 ${community.joined
                             ? "bg-surface-hover text-text-muted hover:bg-accent-500/10 hover:text-accent-500"
                             : "bg-primary text-white hover:bg-primary-hover shadow-[0_2px_10px_rgba(0,170,255,0.3)]"
                             }`}
@@ -86,36 +106,36 @@ const CommunityCard = ({ community, index }: { community: CommunityData; index: 
                     </button>
                 </div>
 
-                <div className="flex flex-col mt-2 gap-0.5">
-                    <p className="font-bold text-[15px] text-text group-hover:text-primary transition-colors">
+                <div className="flex flex-col gap-0.5 mt-1">
+                    <p className="font-extrabold text-[17px] text-text group-hover:text-primary transition-colors">
                         {community.name}
                     </p>
-                    <p className="text-[11px] font-semibold uppercase tracking-wide text-text-faint">
+                    <p className="text-[11px] font-semibold uppercase tracking-widest text-text-faint">
                         {community.category}
                     </p>
                 </div>
 
-                <p className="text-sm text-text-muted mt-2 leading-snug line-clamp-2">
+                <p className="text-sm text-text-muted mt-3 leading-relaxed line-clamp-3">
                     {community.description}
                 </p>
 
-                <div className="flex flex-row items-center gap-3 mt-3 text-[12px] text-text-faint">
-                    <span className="flex flex-row items-center gap-1.5">
-                        <FontAwesomeIcon icon={faUsers} className="text-[11px]" />
+                <div className="flex flex-row items-center gap-4 mt-4 text-[13px] text-text-faint border-t border-border pt-4">
+                    <span className="flex flex-row items-center gap-2">
+                        <FontAwesomeIcon icon={faUsers} className="text-[12px]" />
                         {community.members.toLocaleString()} members
                     </span>
-                    <span className="flex flex-row items-center gap-1.5 text-success-500 font-medium">
-                        <FontAwesomeIcon icon={faCircle} className="text-[6px]" />
+                    <span className="flex flex-row items-center gap-2 text-success-500 font-medium">
+                        <FontAwesomeIcon icon={faCircle} className="text-[7px]" />
                         {community.onlineNow} online
                     </span>
                 </div>
 
                 {community.tags.length > 0 && (
-                    <div className="flex flex-row gap-1.5 flex-wrap mt-3">
+                    <div className="flex flex-row gap-2 flex-wrap mt-4">
                         {community.tags.map((tag, idx) => (
                             <span
                                 key={tag}
-                                className={`px-2 py-0.5 rounded-full text-[11px] font-medium ${TAG_CLASSES[idx % TAG_CLASSES.length]}`}
+                                className={`px-2.5 py-1 rounded-full text-[11px] font-medium ${TAG_CLASSES[idx % TAG_CLASSES.length]}`}
                             >
                                 #{tag}
                             </span>
