@@ -12,9 +12,6 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 
 import { Post, type PostData } from '../../components/feed/Post';
-import { Header } from '../../components/header/Header';
-import { LeftBar } from '../../components/sidebars/LeftBar';
-import { RightBar } from '../../components/sidebars/RightBar';
 import { AttachmentPicker } from '../../components/post/AttachmentPicker';
 import {
     prepareAttachmentsForSave,
@@ -26,9 +23,12 @@ import { usePostsStore } from '../../stores/usePostsStore';
 import { useCommunitiesStore } from '../../stores/useCommunitiesStore';
 import { useAuthStore } from '../../stores/useAuthStore';
 import { getCurrentAuthor } from '../../helpers/post/getCurrentAuthor';
-import { useTheme } from '../../helpers/theme/useTheme';
 
 import avatarGame from '../../assets/logos/raft-logo.png';
+import { Header } from '@/shared/components/header/Header';
+import { LeftBar } from '@/shared/components/sidebars/LeftBar';
+import { RightBar } from '@/shared/components/sidebars/RightBar';
+import { useTheme } from '@/shared/hooks/useTheme';
 
 export const Route = createFileRoute('/community/$communityId')({
     component: CommunityDetail,

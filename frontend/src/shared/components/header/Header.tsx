@@ -1,5 +1,6 @@
-import { useNavigate } from '@tanstack/react-router'
-import { useThemeStore } from '../../stores/useThemeStore';
+import { useNavigate } from '@tanstack/react-router';
+import { useThemeStore } from "../../store/useThemeStore";
+
 import { Search } from '../search/Search';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -9,7 +10,7 @@ import {
     faMoon,
     faSignOutAlt,
 } from "@fortawesome/free-solid-svg-icons";
-import { useAuthStore } from '../../stores/useAuthStore';
+import { useAuthStore } from '../../../stores/useAuthStore';
 
 const floatCard = `
     bg-surface/90 backdrop-blur-md

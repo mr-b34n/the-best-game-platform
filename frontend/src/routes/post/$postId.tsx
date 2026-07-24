@@ -4,13 +4,13 @@ import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { Post } from '../../components/feed/Post';
 import { CommentSection } from '../../components/feed/CommentSection';
 
-import { Header } from '../../components/header/Header';
-import { LeftBar } from '../../components/sidebars/LeftBar';
-import { RightBar } from '../../components/sidebars/RightBar';
 
 import { usePostsStore } from '../../stores/usePostsStore';
 import { getCurrentAuthor } from '../../helpers/post/getCurrentAuthor';
-import { useTheme } from '../../helpers/theme/useTheme';
+import { useTheme } from '@/shared/hooks/useTheme';
+import { LeftBar } from '@/shared/components/sidebars/LeftBar';
+import { RightBar } from '@/shared/components/sidebars/RightBar';
+import { Header } from '@/shared/components/header/Header';
 
 export const Route = createFileRoute('/post/$postId')({
     component: PostDetail,

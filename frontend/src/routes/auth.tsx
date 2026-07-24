@@ -1,6 +1,5 @@
 import { createFileRoute, redirect } from '@tanstack/react-router'
 import { useAuthStore } from '../stores/useAuthStore'
-import { useTheme } from '../helpers/theme/useTheme';
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -15,6 +14,7 @@ import gameLogo from "../assets/logos/gg.png"
 import gameBgIllu from "../assets/bgs/game-illu-bg.webp";
 import googleLogo from "../assets/logos/gg.png";
 import { STRENGTH_LEVELS, validatePassword, type PasswordValidationResult } from '../helpers/password/passwordValidator';
+import { useTheme } from '@/shared/hooks/useTheme';
 
 const Auth = () => {
 	useTheme("Authorization", gameLogo);
